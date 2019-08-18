@@ -1,0 +1,2 @@
+# pydiner
+Python project template.
