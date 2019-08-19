@@ -1,0 +1,13 @@
+{
+  "fountain": {
+    "fizz": 3,
+    "buzz": 5
+  },
+  "range": {
+    "start": 1,
+    "stop": 101,
+    "step": 1
+  },
+  "outpath":
+    "var/cake.txt"
+}
