@@ -1,2 +1,3 @@
 # pydiner
-Python project template.
+
+## UNDER CONSTRUCTION
