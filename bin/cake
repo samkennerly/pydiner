@@ -4,21 +4,25 @@ Example autonomous script.
 Read inputs from a file. Save output to a file.
 Print errors to STDERR. Print all other logs to STDOUT.
 """
-from pydiner import achtung, config, echo, Fountain
+from pydiner import achtung, batcher, config, echo, Fountain
 
 echo('Run',__file__)
 kw = config('cake')
 
 achtung('There is no cake. There is only',kw['fountain'])
-fountain = Fountain(**kw['fountain'])
+fizzbuzz = Fountain(**kw['fountain'])
 
 echo('Generate results in range',kw['range'])
-fizzbuzz = fountain(**kw['range'])
+fizzbuzz = fizzbuzz(**kw['range'])
+
+echo('Break results into batches of',kw['batchsize'])
+fizzbuzz = batcher(fizzbuzz,kw['batchsize'])
+
+echo('Join each batch with newlines')
+fizzbuzz = map('\n'.join,fizzbuzz)
 
 echo('Save results to',kw['outpath'])
 with open(kw['outpath'],'w') as f:
-    write = f.write
-    for x in fizzbuzz:
-        write(x+'\n')
+    f.writelines(fizzbuzz)
 
 echo('Exit',__file__)
