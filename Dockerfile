@@ -1,5 +1,5 @@
 FROM python:3.7.4
-LABEL description="Python sandbox for developers"
+LABEL description="Python development sandbox"
 LABEL maintainer="samkennerly@gmail.com"
 
 # Create project folder
@@ -16,8 +16,8 @@ RUN pip install --upgrade pip && \
     pip install --requirement requirements.txt
 
 # Install project
-#COPY [".","."]
-#RUN pip install --editable .
+COPY [".","."]
+RUN pip install --editable .
 ENV PATH="${WORKDIR}/bin:${PATH}"
 
 CMD ["/bin/bash"]
