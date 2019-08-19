@@ -1,0 +1,26 @@
+build/
+dist/
+
+# Apple debris
+.DS_Store*
+.Spotlight-*
+.Trashes
+.fseventsd
+Thumbs.db
+
+# Jupyter secrets
+.ipynb_checkpoints/
+jupyter_notebook_config.*
+
+# Python caches
+*.egg
+*.egg-info
+*.py[cod]
+*.so
+.cache/
+.pytest_cache/
+.tox/
+__pycache__/
+
+# Sublime Text history
+*.sublime-workspace
