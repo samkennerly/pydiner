@@ -1,0 +1,9 @@
+# Dotfiles and dotfolders
+**/.*
+
+# Jupyter secrets
+.ipynb_checkpoints/
+jupyter_notebook_config.*
+
+# Sublime Text history
+*.sublime-workspace
