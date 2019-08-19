@@ -3,7 +3,7 @@ General-purpose utility functions.
 """
 from collections import OrderedDict
 from datetime import datetime
-from itertools import repeat
+from itertools import islice, repeat, takewhile
 from json import load as readjson
 from pathlib import Path
 from sys import stderr
@@ -11,12 +11,12 @@ from sys import stderr
 REPO = Path(__file__).resolve().parents[2]
 
 def achtung(*args,file=stderr):
-    """ None: Print timestamp and error message(s). """
-    echo('\x1b[93mERROR',*args,'\x1b[0m',file=file)
+    """ None: Print timestamp and error message(s) to STDERR. """
+    print(isonow(),'\x1b[93mERROR',*args,'\x1b[0m',file=file,flush=True)
 
-def badger(iterable,maxlen=10):
+def batcher(seq,maxlen,batch=tuple,taker=islice):
     """ Iterator[tuple]: Length-limited batches taken from iterable. """
-    return zip(*repeat(iter(iterable),int(maxlen)))
+    return takewhile(len,( batch(taker(x,maxlen)) for x in repeat(iter(seq)) ))
 
 def config(profile):
     """ dict: Read configuration file for selected profile. """
@@ -29,7 +29,7 @@ def distinct(seq):
     return iter(OrderedDict.fromkeys(seq))
 
 def echo(*args,file=None):
-    """ None: Print timestamp and log message(s). """
+    """ None: Print timestamp and log message(s) to STDOUT. """
     print(isonow(),*args,file=file,flush=True)
 
 def fullpath(path=''):

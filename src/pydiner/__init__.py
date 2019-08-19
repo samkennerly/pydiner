@@ -5,7 +5,7 @@ from .fountain import Fountain
 from .utensils import (
     REPO,
     achtung,
-    badger,
+    batcher,
     config,
     distinct,
     echo,
