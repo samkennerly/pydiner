@@ -1,0 +1,68 @@
+#!/usr/bin/env zsh
+# Build and run Python development containers.
+
+CONTEXT="$PWD"                    # Path to build context
+NAMETAG="$(basename "$CONTEXT")"  # Name of image to build
+PKGFILE="requirements.txt"        # List of packages to install
+WORKDIR="/context"                # Project folder name in container
+
+help() {
+  echo
+  echo "Run disposable containers built from $CONTEXT"
+  echo
+  echo "Commands:"
+  echo
+  echo "  alamode         Don't make me think, just do all the things"
+  echo "  bake            Build $NAMETAG image from $CONTEXT"
+  echo "  carte           Show all Docker objects on this machine"
+  echo "  debug [SCRIPT]  Run SCRIPT in an interactive Python debugger"
+  echo "  eighty_six      Delete $NAMETAG image, containers, and leftovers"
+  echo "  freeze          Save exact installed packages to $PKGFILE"
+  echo "  runit [CMD]     Run CMD without folder mounts, port mappings, etc"
+  echo "  serve [CMD]     Run CMD with $CONTEXT mounted as $WORKDIR"
+  echo
+  echo "Examples:"
+  echo
+  echo "  cd path/to/my/project"
+  echo "  bin/cake alamode"
+  echo "  bin/cake runit ls -la"
+  echo "  bin/cake debug bin/scratch"
+  echo "  bin/cake serve python -i bin/scratch"
+  echo
+}
+alamode() {
+  bake && freeze && serve "$@"
+}
+bake() {
+  touch "$PKGFILE" &&
+  docker build --tag "$NAMETAG" --build-arg WORKDIR="$WORKDIR" "$CONTEXT" &&
+  docker image prune --force
+}
+carte() {
+  echo "---- Images ----"; docker image ls | sort
+  echo '---- Volumes ----'; docker volume ls | sort
+  echo '---- Networks ----'; docker network ls
+  echo '---- Containers ----'; docker ps --all
+}
+debug() {
+  serve python -m pdb "$@"
+}
+eighty_six() {
+  docker ps --quiet --filter ancestor="$NAMETAG" | xargs docker rm --force &&
+  docker rmi --force "$NAMETAG" &&
+  docker system prune "$@"
+}
+freeze() {
+  docker run --rm "$NAMETAG" pip freeze --exclude-editable > "$PKGFILE" &&
+  bake
+}
+runit() {
+  docker run --rm --interactive --tty "$NAMETAG" "$@"
+}
+serve() {
+  docker run --rm --interactive --tty \
+    --volume "${CONTEXT}:${WORKDIR}:delegated" \
+    ${NAMETAG} "$@"
+}
+
+if [ $# -eq 0 ]; then help; else "$@"; fi
