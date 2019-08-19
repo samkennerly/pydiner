@@ -1,0 +1,30 @@
+ASAP:
+  - finish README
+  - license in each module?
+  - __author__ in each module?
+
+BIN:
+  - bin/cake production path/to/output.txt
+
+DOCS:
+  - https://packaging.python.org/tutorials/creating-documentation/
+  - sphinx? pydoc? tox?
+  - doc/ vs docs/
+
+ETC:
+  - dev.json, staging.json, production.json
+
+PYPA:
+  - create account. check for name clash. see tutorial.
+  - `python setup.py sdist bdist_wheel clean --all` ?
+
+SRC:
+  - utensils: badger decorator with (delay,timeout) kwargs?
+  - utensils: adjust for different Python versions?
+  - lint: flake8 + black?
+  - mypy: type hints?
+  - timeit: speed trials?
+
+TEST:
+  - unittest? remove pytest from setup.py?
+  - finish test_utensils.py
