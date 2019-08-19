@@ -6,11 +6,11 @@ from .utensils import (
     REPO,
     achtung,
     badger,
-    catfiles,
+    config,
     distinct,
     echo,
     fullpath,
-    getparams,
+    genlines,
     hello,
     isonow
     )

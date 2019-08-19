@@ -17,11 +17,11 @@ def badger(meth):
     """ function: If meth fails, then retry with exponential backoff. """
     raise NotImplementedError
 
-def catfiles(*paths):
-    """ Iterator[str]: Read lines from text file(s). """
-    for path in paths:
-        with open(path) as lines:
-            yield from lines
+def config(profile):
+    """ dict: Read configuration file. """
+    path = (REPO/'etc'/profile).with_suffix('.json')
+    with open(path,'r') as f:
+        return readjson(f)
 
 def distinct(seq):
     """ Iterator: Unique sequence elements in original order. """
@@ -35,11 +35,11 @@ def fullpath(path=''):
     """ Path: Expand relative paths and tildes. """
     return Path.cwd()/Path(path).expanduser()
 
-def getparams(path):
-    """ dict: Read parameters from JSON file. """
-    path = (REPO/'etc'/path).with_suffix('.json')
-    with open(path,'r') as f:
-        return readjson(f)
+def genlines(*paths):
+    """ Iterator[str]: Read lines from text file(s). """
+    for path in paths:
+        with open(path) as lines:
+            yield from lines
 
 def hello(obj):
     """ None: Print short description of a Python object. """
