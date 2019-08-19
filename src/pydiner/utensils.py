@@ -3,6 +3,7 @@ General-purpose utility functions.
 """
 from collections import OrderedDict
 from datetime import datetime
+from itertools import repeat
 from json import load as readjson
 from pathlib import Path
 from sys import stderr
@@ -13,12 +14,12 @@ def achtung(*args,file=stderr):
     """ None: Print timestamp and error message(s). """
     echo('\x1b[93mERROR',*args,'\x1b[0m',file=file)
 
-def badger(meth):
-    """ function: If meth fails, then retry with exponential backoff. """
-    raise NotImplementedError
+def badger(iterable,maxlen=10):
+    """ Iterator[tuple]: Length-limited batches taken from iterable. """
+    return zip(*repeat(iter(iterable),int(maxlen)))
 
 def config(profile):
-    """ dict: Read configuration file. """
+    """ dict: Read configuration file for selected profile. """
     path = (REPO/'etc'/profile).with_suffix('.json')
     with open(path,'r') as f:
         return readjson(f)
