@@ -17,6 +17,8 @@ fizzbuzz = fountain(**kw['range'])
 
 echo('Save results to',kw['outpath'])
 with open(kw['outpath'],'w') as f:
-    f.writelines(fizzbuzz)
+    write = f.write
+    for x in fizzbuzz:
+        write(x+'\n')
 
 echo('Exit',__file__)
