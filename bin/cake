@@ -15,11 +15,8 @@ fizzbuzz = Fountain(**kw['fountain'])
 echo('Generate results in range',kw['range'])
 fizzbuzz = fizzbuzz(**kw['range'])
 
-echo('Slice results into batches of',kw['batchsize'])
-fizzbuzz = batcher(fizzbuzz,kw['batchsize'])
-
-echo('Join each batch into a newline-separated string')
-fizzbuzz = map('\n'.join,fizzbuzz)
+echo('Join into strings of size <=',kw['batchsize'])
+fizzbuzz = batcher(fizzbuzz,kw['batchsize'],batch='\n'.join)
 
 echo('Save results to',kw['outpath'])
 with open(kw['outpath'],'w') as f:
