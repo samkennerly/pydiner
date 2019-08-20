@@ -1,17 +1,39 @@
 ASAP:
-  - __author__, license in each module?
+  - license at bottom of each file
+  - finish test_utensils.py
   - create develop branch
+  - lint: flake8 + black?
+  - finish README
 
 DOCS:
   - https://packaging.python.org/tutorials/creating-documentation/
   - sphinx? pydoc? tox?
   - doc/ vs docs/
 
+README:
+  - merge:
+    - dockerbash
+    - kingofsnake
+    - suneku
+  - basics:
+    - clone or download. do not install anything.
+    - modify setup.py first! (or delete it and use PYTHONPATH)
+    - can use PYTHONPATH and requirements.txt instead of setup.py
+    - explain all folders
+  - commands:
+    - check kitchen commands
+  - details:
+    - 'bake' installs from setup.py. use 'freeze' for speed.
+    - 'freeze' overwrites requirements.txt
+    - license in file: useful for scrolling, setting breakpoints
+  - examples:
+    - bin/cake: save 10 billion FizzBuzz in 10 minutes
+    - minimal setup.py
+  - faq:
+    - logs go to STDOUT and STDERR. link to 12-Factor App.
+    - no exception hiding. link to Hiltmon and Toyoda quote.
+
 SRC:
-  - lint: flake8 + black?
   - utensils: adjust for different Python versions?
   - timeit: speed trials?
   - mypy: type hints?
-
-TEST:
-  - finish test_utensils.py
