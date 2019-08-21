@@ -4,7 +4,7 @@
 CONTEXT="$PWD"                    # Path to build context
 NAMETAG="$(basename "$CONTEXT")"  # Name of image to build
 PKGFILE="requirements.txt"        # List of packages to install
-WORKDIR="/context"                # Project folder name in container
+WORKDIR="/context"                # Working directory inside container
 
 help() {
   echo
