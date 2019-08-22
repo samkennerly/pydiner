@@ -1,8 +1,8 @@
 ASAP:
-  - license at bottom of each file
   - finish test_utensils.py
+  - simplify test_fountain.py ?
+  - move kitchen -> project root. (not meant for export!)
   - create develop branch
-  - lint: flake8 + black?
   - finish README
 
 DOCS:
@@ -25,7 +25,6 @@ README:
   - details:
     - 'bake' installs from setup.py. use 'freeze' for speed.
     - 'freeze' overwrites requirements.txt
-    - license in file: useful for scrolling, setting breakpoints
   - examples:
     - bin/cake: save 10 billion FizzBuzz in 10 minutes
     - minimal setup.py
@@ -35,5 +34,6 @@ README:
 
 SRC:
   - utensils: adjust for different Python versions?
+  - lint: flake8 + black?
   - timeit: speed trials?
   - mypy: type hints?
