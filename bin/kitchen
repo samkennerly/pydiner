@@ -7,50 +7,47 @@ PKGFILE="requirements.txt"        # List of packages to install
 WORKDIR="/context"                # Working directory inside container
 
 help() {
-  echo
   echo "Run disposable containers built from $CONTEXT"
-  echo
-  echo "Commands:"
-  echo
-  echo "  alamode         Don't make me think, just do all the things"
-  echo "  bake            Build $NAMETAG image from $CONTEXT"
-  echo "  carte           Show all Docker objects on this machine"
-  echo "  debug [SCRIPT]  Run SCRIPT in an interactive Python debugger"
-  echo "  eighty_six      Delete $NAMETAG image, containers, and leftovers"
-  echo "  freeze          Save exact installed packages to $PKGFILE"
-  echo "  runit [CMD]     Run CMD without folder mounts, port mappings, etc"
-  echo "  serve [CMD]     Run CMD with $CONTEXT mounted as $WORKDIR"
-  echo
-  echo "Examples:"
-  echo
-  echo "  cd path/to/my/project"
-  echo "  bin/cake alamode"
-  echo "  bin/cake runit ls -la"
-  echo "  bin/cake debug bin/scratch"
-  echo "  bin/cake serve python -i bin/scratch"
-  echo
+  echo "\nCommands"
+  echo "help            Show this menu with Docker inventory"
+  echo "alamode         Don't make me think, just do all the things"
+  echo "bake            Build $NAMETAG image from $CONTEXT"
+  echo "clean           Delete $NAMETAG containers and leftovers"
+  echo "debug [SCRIPT]  Run SCRIPT with interactive debugger"
+  echo "eighty_six      Delete $NAMETAG image, containers, and leftovers"
+  echo "freeze          Update $PKGFILE and rebuild image (if needed)"
+  echo "runit [CMD]     Run CMD in an interactive $NAMETAG container"
+  echo "serve [CMD]     Same as runit, but with $WORKDIR mounted from $CONTEXT"
+  echo "test            Run all tests in a $NAMETAG container"
+  echo "\nExamples"
+  echo "cd path/to/my/project"
+  echo "bin/kitchen alamode"
+  echo "bin/kitchen runit"
+  echo "bin/kitchen serve soda --fizz=4 0 10"
+  echo "bin/kitchen debug src/pydiner/utensils.py"
+  echo "\nImages" && docker image ls | sort
+  echo "\nVolumes" && docker volume ls | sort
+  echo "\nNetworks" && docker network ls
+  echo "\nContainers" && docker ps --all
 }
 alamode() {
-  bake && freeze && serve "$@"
+  bake && freeze && test && serve "$@"
 }
 bake() {
   touch "$PKGFILE" &&
   docker build --tag "$NAMETAG" --build-arg WORKDIR="$WORKDIR" "$CONTEXT" &&
   docker image prune --force
 }
-carte() {
-  echo "---- Images ----"; docker image ls | sort
-  echo '---- Volumes ----'; docker volume ls | sort
-  echo '---- Networks ----'; docker network ls
-  echo '---- Containers ----'; docker ps --all
+clean() {
+  docker ps --quiet --filter ancestor="$NAMETAG" | xargs docker rm --force &&
+  docker system prune "$@"
 }
 debug() {
   serve python -m pdb "$@"
 }
 eighty_six() {
-  docker ps --quiet --filter ancestor="$NAMETAG" | xargs docker rm --force &&
   docker rmi --force "$NAMETAG" &&
-  docker system prune "$@"
+  clean "$@"
 }
 freeze() {
   docker run --rm "$NAMETAG" pip freeze --exclude-editable > "$PKGFILE" &&
@@ -62,7 +59,10 @@ runit() {
 serve() {
   docker run --rm --interactive --tty \
     --volume "${CONTEXT}:${WORKDIR}:delegated" \
-    ${NAMETAG} "$@"
+    "$NAMETAG" "$@"
+}
+test() {
+  docker run --rm "$NAMETAG" python -m unittest "$@" --verbose
 }
 
 if [ $# -eq 0 ]; then help; else "$@"; fi
