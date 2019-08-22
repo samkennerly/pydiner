@@ -1,7 +1,8 @@
 ASAP:
+  - abandon unittest
   - finish test_utensils.py
-  - simplify test_fountain.py ?
-  - move kitchen -> project root. (not meant for export!)
+  - repair test_fountain.py
+  - move kitchen -> project root ?
   - create develop branch
   - finish README
 
