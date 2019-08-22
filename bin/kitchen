@@ -8,27 +8,30 @@ WORKDIR="/context"                # Working directory inside container
 
 help() {
   echo "Run disposable containers built from $CONTEXT"
-  echo "\nCommands"
+  echo
+  echo "COMMANDS"
   echo "alamode         Don't make me think, just do all the things"
   echo "bake            Build $NAMETAG image from $CONTEXT"
   echo "clean           Delete $NAMETAG containers and leftovers"
   echo "debug [SCRIPT]  Run SCRIPT with interactive debugger"
   echo "eighty_six      Delete $NAMETAG image, containers, and leftovers"
   echo "freeze          Update $PKGFILE and rebuild image (if needed)"
-  echo "help            Show this menu with Docker inventory"
+  echo "help            Show commands, examples, and Docker objects"
   echo "runit [CMD]     Run CMD in an interactive $NAMETAG container"
   echo "serve [CMD]     Same as runit, but with $WORKDIR mounted from $CONTEXT"
-  echo "test            Run all tests in a $NAMETAG container"
-  echo "\nExamples"
+  echo
+  echo "EXAMPLES"
   echo "cd path/to/my/project"
   echo "bin/kitchen alamode"
-  echo "bin/kitchen runit"
+  echo "bin/kitchen runit ls -la"
   echo "bin/kitchen serve soda --fizz=4 0 10"
   echo "bin/kitchen debug src/pydiner/utensils.py"
-  echo "\nImages" && docker image ls | sort
-  echo "\nVolumes" && docker volume ls | sort
-  echo "\nNetworks" && docker network ls
-  echo "\nContainers" && docker ps --all
+  echo
+  echo "DOCKER OBJECTS"
+  echo "---- Images ----" && docker image ls | sort
+  echo "---- Volumes ----" && docker volume ls | sort
+  echo "---- Networks ----" && docker network ls
+  echo "---- Containers ----" && docker ps --all
 }
 alamode() {
   bake && freeze && test && serve "$@"
@@ -60,9 +63,6 @@ serve() {
   docker run --rm --interactive --tty \
     --volume "${CONTEXT}:${WORKDIR}:delegated" \
     "$NAMETAG" "$@"
-}
-test() {
-  docker run --rm "$NAMETAG" python -m unittest "$@" --verbose
 }
 
 if [ $# -eq 0 ]; then help; else "$@"; fi
