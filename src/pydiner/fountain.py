@@ -1,24 +1,20 @@
-"""
-Fountain class. Run this module to test it.
-"""
-from collections.abc import Reversible
 from itertools import count
 
 FIZZ,BUZZ,START,STOP,STEP = (3,5,1,101,1)
 
-class Fountain(Reversible):
+class Fountain:
     """
     Sliceable infinite FizzBuzz. Mostly useless.
     Example of using generators for lazy evaluation.
     The classic FizzBuzz problem is described here:
 
-    www.tomdalling.com/blog/software-design/fizzbuzz-in-too-much-detail/
-    blog.codinghorror.com/why-cant-programmers-program/
-    imranontech.com/2007/01/24/
+    https://www.tomdalling.com/blog/software-design/fizzbuzz-in-too-much-detail/
+    https://blog.codinghorror.com/why-cant-programmers-program/
+    https://imranontech.com/2007/01/24/
 
     ---- Caution ----
 
-    Never list(), tuple(), or set() a Fountain.
+    Never list(), tuple(), or set() a Fountain!
     Expressions like list(forever) will never return.
     https://en.wikipedia.org/wiki/Halting_problem
 
@@ -47,8 +43,8 @@ class Fountain(Reversible):
     >>> soda[1_000_000_000_001:6_000_000_000_000:1_000_000_000_000]
     ('1000000000001', 'Buzz', '3000000000001', '4000000000001', 'Buzz')
 
-    ... slicing until "the end" is not possible.
-    >>> soda[0:]
+    Slicing until "the end" is not possible.
+    >>> soda[1:]
     Traceback (most recent call last):
     ...
     ValueError: endless slice
@@ -70,14 +66,14 @@ class Fountain(Reversible):
     ['Fizz', 'Buzz', 'Fizz', '5', 'FizzBuzz']
 
     Iterating over a Fountain is possible, but be careful.
-    This loop is safe (though soda[9001] is much faster):
+    This loop is safe, but soda[9001] is much faster:
     >>> for i,x in enumerate(soda):
     ...     if i > 9000:
     ...         break
     >>> x
     '9001'
 
-    Fountains, unlike generators, are never exhausted.
+    This is the big difference between a Fountain and Sequence:
     >>> len(soda)
     Traceback (most recent call last):
     ...
@@ -91,11 +87,11 @@ class Fountain(Reversible):
     shape = property(lambda self: (self.fizz,self.buzz))
 
     def __bool__(self):
-        """ bool: Hard-coded to avoid calling __len__ """
+        """ bool: Hard-coded to avoid any __len__ calls. """
         return True
 
     def __call__(self,start=START,stop=STOP,step=STEP):
-        """ Iterator[str]: Generate values for selected range """
+        """ Iterator[str]: Generate values for selected range. """
         fizz,buzz = self.fizz,self.buzz
 
         index = count(start,step) if stop is None else range(start,stop,step)
@@ -103,7 +99,7 @@ class Fountain(Reversible):
             yield ('Fizz'*(not i%fizz) + 'Buzz'*(not i%buzz)) or str(i)
 
     def __getitem__(self,i):
-        """ Union[str,Tuple[str,...]]: Value(s) at selected index or slice """
+        """ str or Tuple[str,...]: Value(s) at selected index or slice. """
 
         if not isinstance(i,slice):
             return next(self(i,None,1))
@@ -124,13 +120,8 @@ class Fountain(Reversible):
 
     def __repr__(self):
         """ str: Reproducible representation. """
-        return "{}(fizz={},buzz={})".format(type(self).__name__,*self.shape)
+        return f"{type(self).__name__}(fizz={self.fizz},buzz={self.buzz})"
 
     def __reversed__(self):
         """ Iterator[str]: Values from 0 to minus forever. """
         return self(0,None,-1)
-
-if __name__ == '__main__':
-    import doctest
-    doctest.testmod()
-    print('OK',__file__)
