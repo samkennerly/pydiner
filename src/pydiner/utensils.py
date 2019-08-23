@@ -12,7 +12,7 @@ REPO = Path(__file__).resolve().parents[2]
 
 def achtung(*args,file=stderr):
     """ None: Print timestamp and error message(s) to STDERR. """
-    print(isonow(),'\x1b[93mERROR',*args,'\x1b[0m',file=file,flush=True)
+    print(isonow(' '),'\x1b[93m* ACHTUNG *\x1b[0m',*args,file=file,flush=True)
 
 def batcher(seq,maxlen,batch=tuple,taker=islice):
     """ Iterator[tuple]: Length-limited batches taken from iterable. """
@@ -30,7 +30,7 @@ def distinct(seq):
 
 def echo(*args,file=None):
     """ None: Print timestamp and log message(s) to STDOUT. """
-    print(isonow(),*args,file=file,flush=True)
+    print(isonow(' '),*args,file=file,flush=True)
 
 def fullpath(path=''):
     """ Path: Expand relative paths and tildes. """
