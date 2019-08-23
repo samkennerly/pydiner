@@ -1,5 +1,4 @@
 ASAP:
-  - abandon unittest
   - finish test_utensils.py
   - repair test_fountain.py
   - move kitchen -> project root ?
@@ -10,6 +9,11 @@ DOCS:
   - https://packaging.python.org/tutorials/creating-documentation/
   - sphinx? pydoc? tox?
   - doc/ vs docs/
+
+KITCHEN:
+  - build multiple images: pydiner:latest, pydiner:3.4, ...
+  - Dockerfile build-arg for Python version?
+  - kitchen commands must accept a tag (default 'latest')
 
 README:
   - merge:
