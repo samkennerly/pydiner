@@ -15,7 +15,7 @@ kw = \
   , 'Programming Language :: Python :: 3'
   ]
 , 'description': 'Python project template'
-, 'install_requires': []
+, 'install_requires': ['pytest']
 , 'keywords': 'docker environment kitchen sandbox template'
 , 'license': read('LICENSE')
 , 'long_description': read('README.md')
