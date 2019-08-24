@@ -37,14 +37,14 @@ def fullpath(path=''):
     return Path.cwd()/Path(path).expanduser()
 
 def genlines(*paths):
-    """ Iterator[str]: Read lines from text file(s). """
+    """ Iterator[str]: Read one or more text files lazily. """
     for path in paths:
-        with open(path) as lines:
-            yield from lines
+        with open(path) as file:
+            yield from file
 
 def hello(obj):
     """ None: Print short description of a Python object. """
-    print(type(obj).__name__,obj.__doc__ or 'No docstring!',sep='\n')
+    print(obj.__name__,type(obj).__name__,obj.__doc__)
 
 def isonow(sep='T',timespec='seconds'):
     """ str: UTC date and time in ISO format. """
