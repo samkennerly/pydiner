@@ -34,7 +34,7 @@ help() {
   echo "---- Containers ----" && docker ps --all
 }
 alamode() {
-  bake && freeze && test && serve "$@"
+  bake && freeze && serve "$@"
 }
 bake() {
   touch "$PKGFILE" &&
