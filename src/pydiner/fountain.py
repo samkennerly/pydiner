@@ -1,6 +1,7 @@
 from itertools import count
 
-FIZZ,BUZZ,START,STOP,STEP = (3,5,1,101,1)
+FIZZ, BUZZ, START, STOP, STEP = (3, 5, 1, 101, 1)
+
 
 class Fountain:
     """
@@ -80,43 +81,43 @@ class Fountain:
     ZeroDivisionError: FizzBuzz forever
     """
 
-    def __init__(self,fizz=FIZZ,buzz=BUZZ):
+    def __init__(self, fizz=FIZZ, buzz=BUZZ):
         self.fizz = int(fizz)
         self.buzz = int(buzz)
 
-    shape = property(lambda self: (self.fizz,self.buzz))
+    shape = property(lambda self: (self.fizz, self.buzz))
 
     def __bool__(self):
         """ bool: Hard-coded to avoid any __len__ calls. """
         return True
 
-    def __call__(self,start=START,stop=STOP,step=STEP):
+    def __call__(self, start=START, stop=STOP, step=STEP):
         """ Iterator[str]: Generate values for selected range. """
-        fizz,buzz = self.fizz,self.buzz
+        fizz, buzz = self.fizz, self.buzz
 
-        index = count(start,step) if stop is None else range(start,stop,step)
-        for i in index:
-            yield ('Fizz'*(not i%fizz) + 'Buzz'*(not i%buzz)) or str(i)
+        ints = count(start, step) if stop is None else range(start, stop, step)
+        for i in ints:
+            yield ("Fizz" * (not i % fizz) + "Buzz" * (not i % buzz)) or str(i)
 
-    def __getitem__(self,i):
+    def __getitem__(self, i):
         """ str or Tuple[str,...]: Value(s) at selected index or slice. """
 
-        if not isinstance(i,slice):
-            return next(self(i,None,1))
+        if not isinstance(i, slice):
+            return next(self(i, None, 1))
 
-        start,stop,step = i.start or 0, i.stop, i.step or 1
+        start, stop, step = i.start or 0, i.stop, i.step or 1
         if stop is None:
-            raise ValueError('endless slice')
+            raise ValueError("endless slice")
 
-        return tuple(self(start,stop,step))
+        return tuple(self(start, stop, step))
 
     def __iter__(self):
         """ Iterator[str]: Values from 0 to forever. """
-        return self(0,None,1)
+        return self(0, None, 1)
 
     def __len__(self):
         """ None: Raise error because math.inf is not an int. """
-        raise ZeroDivisionError('FizzBuzz forever')
+        raise ZeroDivisionError("FizzBuzz forever")
 
     def __repr__(self):
         """ str: Reproducible representation. """
@@ -124,4 +125,4 @@ class Fountain:
 
     def __reversed__(self):
         """ Iterator[str]: Values from 0 to minus forever. """
-        return self(0,None,-1)
+        return self(0, None, -1)

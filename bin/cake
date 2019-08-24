@@ -6,21 +6,21 @@ Print errors to STDERR. Print all other logs to STDOUT.
 """
 from pydiner import achtung, batcher, config, echo, Fountain
 
-echo('Run',__file__)
-kw = config('cake')
+echo("Run", __file__)
+kw = config("cake")
 
-achtung('There is no cake. There is only',kw['fountain'])
-fizzbuzz = Fountain(**kw['fountain'])
+achtung("There is no cake. There is only", kw["fountain"])
+fizzbuzz = Fountain(**kw["fountain"])
 
-echo('Generate results in range',kw['range'])
-fizzbuzz = fizzbuzz(**kw['range'])
+echo("Generate results in range", kw["range"])
+fizzbuzz = fizzbuzz(**kw["range"])
 
-echo('Join into strings of size <=',kw['batchsize'])
-fizzbuzz = batcher(fizzbuzz,kw['batchsize'],batch='\n'.join)
+echo("Join into strings of size <=", kw["batchsize"])
+fizzbuzz = batcher(fizzbuzz, kw["batchsize"], batch="\n".join)
 
-echo('Save results to',kw['outpath'])
-with open(kw['outpath'],'w') as f:
+echo("Save results to", kw["outpath"])
+with open(kw["outpath"], "w") as f:
     for x in fizzbuzz:
-        print(x,file=f)
+        print(x, file=f)
 
-echo('Exit',__file__)
+echo("Exit", __file__)
