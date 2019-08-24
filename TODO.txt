@@ -1,6 +1,6 @@
 ASAP:
-  - move kitchen -> project root ?
   - create develop branch
+  - lint: flake8 + black?
   - finish README
 
 DOCS:
