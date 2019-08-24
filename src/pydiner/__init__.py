@@ -12,5 +12,7 @@ from .utensils import (
     fullpath,
     genlines,
     hello,
-    isonow
-    )
+    isonow,
+)
+
+# flake8: noqa
