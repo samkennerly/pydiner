@@ -1,6 +1,7 @@
 ASAP:
-  - lint: flake8 + black?
+  - merge with master
   - finish README
+  - release 1.0.0
 
 DOCS:
   - https://packaging.python.org/tutorials/creating-documentation/
@@ -13,10 +14,10 @@ KITCHEN:
   - kitchen commands must accept a tag (default 'latest')
 
 README:
-  - merge:
-    - dockerbash
-    - kingofsnake
-    - suneku
+  - abstract:
+    - see dockerbash
+    - see kingofsnake
+    - see suneku
   - basics:
     - clone or download. do not install anything.
     - modify setup.py first! (or delete it and use PYTHONPATH)
@@ -36,6 +37,5 @@ README:
 
 SRC:
   - utensils: adjust for different Python versions?
-  - lint: flake8 + black?
   - timeit: speed trials?
   - mypy: type hints?
