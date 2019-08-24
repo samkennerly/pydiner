@@ -1,6 +1,4 @@
 ASAP:
-  - finish test_utensils.py
-  - repair test_fountain.py
   - move kitchen -> project root ?
   - create develop branch
   - finish README
