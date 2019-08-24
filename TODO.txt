@@ -1,5 +1,4 @@
 ASAP:
-  - create develop branch
   - lint: flake8 + black?
   - finish README
 
