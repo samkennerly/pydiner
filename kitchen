@@ -62,6 +62,7 @@ runit() {
 serve() {
   docker run --rm --interactive --tty \
     --volume "${CONTEXT}:${WORKDIR}:delegated" \
+    --hostname "${NAMETAG}" \
     "$NAMETAG" "$@"
 }
 
