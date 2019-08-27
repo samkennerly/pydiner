@@ -15,7 +15,7 @@ help() {
   echo "clean           Delete $NAMETAG containers and leftovers"
   echo "debug [SCRIPT]  Run SCRIPT with interactive debugger"
   echo "eighty_six      Delete $NAMETAG image, containers, and leftovers"
-  echo "freeze          Update $PKGFILE and rebuild image (if needed)"
+  echo "freeze          Update $PKGFILE and rebuild image"
   echo "help            Show commands, examples, and Docker objects"
   echo "runit [CMD]     Run CMD in an interactive $NAMETAG container"
   echo "serve [CMD]     Same as runit, but with $WORKDIR mounted from $CONTEXT"
@@ -65,5 +65,4 @@ serve() {
     --hostname "${NAMETAG}" \
     "$NAMETAG" "$@"
 }
-
 if [ $# -eq 0 ]; then help; else "$@"; fi
