@@ -1,12 +1,7 @@
 ASAP:
-  - delete old repo (after dummy checks)
-  - extract README from portfolio
   - etc: small.json, medium.json, large.json for bin/cake ?
+  - finish README
   - release 1.0.0
-
-DOCKER:
-  - COPY specific folders instead of .dockerignore?
-  - do not copy /var folder.
 
 DOCS:
   - https://packaging.python.org/tutorials/creating-documentation/
