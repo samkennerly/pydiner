@@ -1,5 +1,6 @@
-build/
-dist/
+# Variable data
+/var/
+!/var/cake.txt
 
 # Apple debris
 .DS_Store*

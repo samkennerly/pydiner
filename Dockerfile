@@ -15,9 +15,15 @@ COPY ["requirements.txt","."]
 RUN pip install --upgrade pip && \
     pip install --requirement requirements.txt
 
-# Install project
+# Copy project files (use .dockerignore to exclude)
 COPY [".","."]
-RUN pip install --editable .
-ENV PATH="${WORKDIR}/bin:${PATH}"
+
+# Use setup.py to install project packages
+#COPY ["setup.py","."]
+#RUN pip install --editable .
+
+# Find src/ code and bin/ scripts
+ENV PYTHONPATH="${WORKDIR}/src" \
+    PATH="${WORKDIR}/bin:${PATH}"
 
 CMD ["/bin/bash"]
