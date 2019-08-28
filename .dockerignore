@@ -1,6 +1,14 @@
 # Dotfiles and dotfolders
 **/.*
 
+# Variables
+var/*
+
+# Yo dawg I herd U like Docker
+.dockerignore
+Dockerfile
+kitchen
+
 # Jupyter secrets
 .ipynb_checkpoints/
 jupyter_notebook_config.*
