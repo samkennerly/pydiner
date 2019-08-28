@@ -1,6 +1,6 @@
 ASAP:
-  - etc: small.json, medium.json, large.json for bin/cake ?
-  - finish README
+  - etc: small.json, medium.json, large.json ?
+  - finish README. link -> Docker Sandboxes tutorial
   - release 1.0.0
 
 DOCS:
@@ -9,9 +9,10 @@ DOCS:
   - doc/ vs docs/
 
 KITCHEN:
+  - Dockerfile build-arg in FROM? (need it for Python version)
   - build multiple images: pydiner:latest, pydiner:3.4, ...
-  - Dockerfile build-arg for Python version?
   - kitchen commands must accept a tag (default 'latest')
+
 SRC:
   - utensils: adjust for different Python versions?
   - timeit: speed trials?
