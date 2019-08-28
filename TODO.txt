@@ -8,11 +8,9 @@ DOCS:
   - sphinx? pydoc? tox?
   - doc/ vs docs/
 
-KITCHEN:
-  - build multiple images: pydiner:latest, pydiner:3.4, ...
-  - Dockerfile build-arg for Python version?
-  - kitchen commands must accept a tag (default 'latest')
-SRC:
+FUTURE:
+  - flask example
+  - multiple Python versions? need build-arg, nametags like pydiner:2.7
   - utensils: adjust for different Python versions?
   - timeit: speed trials?
   - mypy: type hints?
