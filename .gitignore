@@ -21,6 +21,7 @@ jupyter_notebook_config.*
 .cache/
 .pytest_cache/
 .tox/
+.venv/
 __pycache__/
 
 # Sublime Text history
