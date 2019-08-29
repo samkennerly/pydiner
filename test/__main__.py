@@ -1,10 +1,7 @@
 """
 Example: Discover and run tests in each module.
 """
-from . import fixtures
-from . import test_fountain
-from . import test_utensils
-
+from . import fixtures, test_fountain, test_utensils
 
 def test_all(module):
     print("", module.__name__, 10 * "-", sep="\n")
