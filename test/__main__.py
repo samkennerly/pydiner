@@ -3,6 +3,7 @@ Example: Discover and run tests in each module.
 """
 from . import fixtures, test_fountain, test_utensils
 
+
 def test_all(module):
     print("", module.__name__, 10 * "-", sep="\n")
     for name, meth in vars(module).items():

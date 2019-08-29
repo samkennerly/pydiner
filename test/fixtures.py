@@ -3,7 +3,8 @@ Example: Create test fixtures for test modules.
 """
 import pathlib
 
-TMPDIR = pathlib.Path(__file__).parent.resolve()/'tmp'
+TMPDIR = pathlib.Path(__file__).parent.resolve() / "tmp"
+
 
 def cleartmp():
     if TMPDIR.exists():
