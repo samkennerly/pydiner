@@ -1,6 +1,8 @@
 ASAP:
+  - simplify executable(s)
+  - simplify tests. move tmp/ outside test/ folder.
   - etc: small.json, medium.json, large.json ?
-  - finish README. link -> Docker Sandboxes tutorial
+  - finish README
   - release 1.0.0
 
 DOCS:
