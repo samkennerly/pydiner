@@ -1,5 +1,5 @@
 """
-General-purpose utility functions.
+Utility functions.
 """
 from collections import OrderedDict
 from datetime import datetime

@@ -1,7 +1,6 @@
 """
 Example Python package.
 """
-from .fountain import Fountain
 from .utensils import (
     REPO,
     achtung,
@@ -14,5 +13,3 @@ from .utensils import (
     hello,
     isonow,
 )
-
-# flake8: noqa
