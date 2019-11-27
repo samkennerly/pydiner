@@ -1,8 +1,8 @@
 ASAP:
-  - simplify executable(s)
+  - bin/scrambled
+  - delete old scripts
   - double-check .gitignore
   - simplify tests. move tmp/ outside test/ folder.
-  - trim requirements (Black runs separately)
   - autoformat with Black
   - finish README
   - release 1.0.0
