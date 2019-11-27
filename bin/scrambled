@@ -1,0 +1,54 @@
+#!/usr/bin/env python3
+
+from argparse import ArgumentParser
+from datetime import datetime
+from itertools import permutations
+from pathlib import Path
+
+from pydiner import REPO, achtung, batcher, clock, echo, fullpath, getparams
+
+BATCHSIZE = 32_000
+
+parsed = ArgumentParser()
+parsed.description = """
+    Find all derangements of characters in WORDS.
+    Save results (as lines of text) to OUTPATH.
+    If no OUTPATH, then print results to STDOUT.
+"""
+arg = parsed.add_argument
+arg('WORDS', nargs='+', default=None, type=str, help="scramble these strings")
+arg('-n', '--num', default=None, type=int, help="max number of lines to output")
+arg('-o', '--output', default=None, type=Path, help="save output to this file")
+arg('-p', '--params', default=None, type=Path, help="read inputs from this file")
+arg('-q', '--quiet', action="store_true", help="no log messages to STDOUT")
+parsed = parsed.parse_args()
+quiet = parsed.quiet
+
+def deranged(*words):
+    chars = " ".join(words)
+    lines = permutations(sorted(chars))
+    for line in map("".join, lines):
+        if not any( x == y for x,y in zip(chars, line) ):
+            yield line
+
+t = datetime.now()
+if not quiet:
+    echo("Run", __file__)
+
+for line in deranged(*parsed.WORDS):
+    print(*line, flush=True, sep="\t")
+
+#for batch in batcher(lines, BATCHSIZE, "\n".join):
+
+t = datetime.now() - t
+if not quiet:
+    echo("Elapsed time:", t)
+    echo("Exit", __file__)
+
+
+# Get defaults from params file
+# Count total lines
+
+
+
+
