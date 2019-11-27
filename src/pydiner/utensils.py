@@ -42,8 +42,8 @@ def fullpath(path=""):
     return Path.cwd() / Path(path).expanduser()
 
 
-def getconfig(profile):
-    """ dict, list, or None: Read configuration file if it exists. """
+def getparams(profile):
+    """ dict, list, or None: Read parameters from JSON file if it exists. """
     path = (REPO / "etc" / profile).with_suffix(".json")
     if path.is_file():
         with open(path, "r") as f:

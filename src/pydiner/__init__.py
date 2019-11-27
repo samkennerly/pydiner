@@ -9,7 +9,7 @@ from .utensils import (
     distinct,
     echo,
     fullpath,
-    getconfig,
+    getparams,
     hello,
     iterlines,
 )
