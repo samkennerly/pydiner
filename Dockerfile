@@ -7,20 +7,11 @@ ARG WORKDIR=/context
 WORKDIR "${WORKDIR}"
 
 # Install system packages
-RUN apt-get -y update && \
-    apt-get -y install gcc less tree vim zip
+RUN apt-get -y update && apt-get -y install less tree zip
 
 # Install Python packages
 COPY ["requirements.txt","."]
-RUN pip install --upgrade pip && \
-    pip install --requirement requirements.txt
-
-# Copy project files (use .dockerignore to exclude)
-COPY [".","."]
-
-# Use setup.py to install project packages
-#COPY ["setup.py","."]
-#RUN pip install --editable .
+RUN pip install --upgrade pip && pip install --requirement requirements.txt
 
 # Find src/ code and bin/ scripts
 ENV PYTHONPATH="${WORKDIR}/src" \
