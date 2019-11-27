@@ -14,7 +14,7 @@ WARNING = "\x1b[93m* ACHTUNG *\x1b[0m"
 
 def achtung(*args, file=stderr):
     """ None: Print timestamp and error message(s) to STDERR. """
-    print(isonow(" "), WARNING, *args, file=file, flush=True)
+    print(clock(), WARNING, *args, file=file, flush=True)
 
 
 def batcher(seq, maxlen, batch=tuple, taker=islice):
@@ -34,7 +34,7 @@ def distinct(seq):
 
 def echo(*args, file=None):
     """ None: Print timestamp and log message(s) to STDOUT. """
-    print(isonow(" "), *args, file=file, flush=True)
+    print(clock(), *args, file=file, flush=True)
 
 
 def fullpath(path=""):
@@ -52,7 +52,7 @@ def getconfig(profile):
 
 def hello(obj):
     """ None: Print short description of a Python object. """
-    print(obj.__name__, type(obj).__name__, obj.__doc__)
+    print(obj.__name__, type(obj).__name__, obj.__doc__, sep="\n")
 
 
 def iterlines(*paths):
