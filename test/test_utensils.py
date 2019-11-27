@@ -18,6 +18,14 @@ def test_batcher():
     assert list(output) == batches
 
 
+def test_clock():
+    now = datetime.datetime.utcnow()
+    stamped = datetime.datetime.fromisoformat(pydiner.clock())
+    longtime = datetime.timedelta(seconds=1)
+
+    assert abs(stamped - now) < longtime
+
+
 def test_distinct():
     assert "".join(pydiner.distinct("spam" * 100)) == "spam"
 
@@ -30,7 +38,7 @@ def test_fullpath():
     assert pydiner.fullpath(relative) == pathlib.Path.cwd() / relative
 
 
-def test_genlines():
+def test_iterlines():
     folder = fixtures.TMPDIR
     lines = [f"{i} spam\n" for i in range(10)]
     paths = [folder / f"spam{i}.txt" for i in range(3)]
@@ -41,17 +49,9 @@ def test_genlines():
             f.writelines(lines)
 
     lines = len(paths) * lines
-    output = pydiner.genlines(*paths)
+    output = pydiner.iterlines(*paths)
 
     assert list(output) == lines
-
-
-def test_isonow():
-    now = datetime.datetime.utcnow()
-    stamped = datetime.datetime.fromisoformat(pydiner.isonow())
-    longtime = datetime.timedelta(seconds=1)
-
-    assert abs(stamped - now) < longtime
 
 
 def test_loggers():

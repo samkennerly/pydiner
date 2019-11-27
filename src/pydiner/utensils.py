@@ -8,7 +8,7 @@ from json import load as readjson
 from pathlib import Path
 from sys import stderr
 
-REPO = Path(__file__).resolve().parents[2]
+REPO = Path(__file__).resolve().parent.parent.parent
 WARNING = "\x1b[93m* ACHTUNG *\x1b[0m"
 
 
@@ -22,11 +22,9 @@ def batcher(seq, maxlen, batch=tuple, taker=islice):
     return takewhile(len, (batch(taker(x, maxlen)) for x in repeat(iter(seq))))
 
 
-def config(profile):
-    """ dict: Read configuration file for selected profile. """
-    path = (REPO / "etc" / profile).with_suffix(".json")
-    with open(path, "r") as f:
-        return readjson(f)
+def clock(timespec="seconds"):
+    """ str: UTC date and time and ISO format. """
+    return datetime.utcnow().isoformat(sep=" ", timespec=timespec)
 
 
 def distinct(seq):
@@ -44,11 +42,12 @@ def fullpath(path=""):
     return Path.cwd() / Path(path).expanduser()
 
 
-def genlines(*paths):
-    """ Iterator[str]: Read one or more text files lazily. """
-    for path in paths:
-        with open(path) as file:
-            yield from file
+def getconfig(profile):
+    """ dict, list, or None: Read configuration file if it exists. """
+    path = (REPO / "etc" / profile).with_suffix(".json")
+    if path.is_file():
+        with open(path, "r") as f:
+            return readjson(f)
 
 
 def hello(obj):
@@ -56,6 +55,9 @@ def hello(obj):
     print(obj.__name__, type(obj).__name__, obj.__doc__)
 
 
-def isonow(sep="T", timespec="seconds"):
-    """ str: UTC date and time in ISO format. """
-    return datetime.utcnow().isoformat(sep=sep, timespec=timespec)
+def iterlines(*paths):
+    """ Iterator[str]: Read one or more text files lazily. """
+    for path in paths:
+        with open(path) as file:
+            yield from file
+
