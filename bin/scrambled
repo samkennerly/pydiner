@@ -7,47 +7,63 @@ from pathlib import Path
 
 from pydiner import REPO, achtung, batcher, clock, echo, fullpath, getparams
 
-BATCHSIZE = 32_000
+def argparsed():
+    """ dict: Parameters parsed from command-line inputs. """
+    parser = ArgumentParser()
+    parser.description = """
+        Find all derangements of characters in WORDS.
+        Save results (as lines of text) to OUTPATH.
+        If no OUTPATH, then print results to STDOUT.
+    """
+    arg = parser.add_argument
+    arg('words', nargs='+', type=str, help="scramble these strings")
+    arg('-n', '--nbatch', default=1_000, type=int, help="maximum batch size")
+    arg('-o', '--output', type=Path, help="save output to this file")
+    #arg('-p', '--profile', type=Path, help="read inputs from this file")
+    arg('-q', '--quiet', action="store_true", help="no log messages to STDOUT")
 
-parsed = ArgumentParser()
-parsed.description = """
-    Find all derangements of characters in WORDS.
-    Save results (as lines of text) to OUTPATH.
-    If no OUTPATH, then print results to STDOUT.
-"""
-arg = parsed.add_argument
-arg('WORDS', nargs='+', default=None, type=str, help="scramble these strings")
-arg('-n', '--num', default=None, type=int, help="max number of lines to output")
-arg('-o', '--output', default=None, type=Path, help="save output to this file")
-arg('-p', '--params', default=None, type=Path, help="read inputs from this file")
-arg('-q', '--quiet', action="store_true", help="no log messages to STDOUT")
-parsed = parsed.parse_args()
-quiet = parsed.quiet
+    return vars(parser.parse_args())
 
-def deranged(*words):
-    chars = " ".join(words)
-    lines = permutations(sorted(chars))
-    for line in map("".join, lines):
-        if not any( x == y for x,y in zip(chars, line) ):
-            yield line
+def batchwrite(lines, path, nbatch=1):
+    """ int: Write lines of text to a file lazily. Return number of chars written. """
+    batches = batcher(lines, nbatch, joined="\n".join)
+    with open(path, 'w') as file:
+        return sum(map(file.write, batches))
 
-t = datetime.now()
+def countprint(lines):
+    raise NotImplementedError
+
+def derangements(chars):
+    """ Iterator[str]: Permutations of chars which move every element. """
+    lines = map("".join, permutations(sorted(chars)))
+    lines = ( x for x in lines if not any( y == z for y,z in zip(x, chars) ) )
+
+    return lines
+
+params = argparsed()
+#maxlen = params['maxlen']
+nbatch = params['nbatch']
+output = params['output']
+words = params['words']
+quiet = params['quiet']
+
 if not quiet:
-    echo("Run", __file__)
+    t = datetime.now()
+    echo("Batch size:", nbatch)
 
-for line in deranged(*parsed.WORDS):
-    print(*line, flush=True, sep="\t")
+chars = " ".join(words)
+lines = derangements(chars)
+nchars = batchwrite(lines, output, nbatch)
 
-#for batch in batcher(lines, BATCHSIZE, "\n".join):
-
-t = datetime.now() - t
 if not quiet:
+    t = datetime.now() - t
+    echo("Characters written:", nchars)
     echo("Elapsed time:", t)
-    echo("Exit", __file__)
 
 
-# Get defaults from params file
-# Count total lines
+# Some newlines are missing!
+
+
 
 
 
