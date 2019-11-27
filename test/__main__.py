@@ -1,7 +1,7 @@
 """
 Example: Discover and run tests in each module.
 """
-from . import fixtures, test_fountain, test_utensils
+from . import fixtures, test_utensils
 
 
 def test_all(module):
@@ -14,7 +14,6 @@ def test_all(module):
 
 print("Run", __file__)
 
-test_all(test_fountain)
 test_all(test_utensils)
 fixtures.cleartmp()
 

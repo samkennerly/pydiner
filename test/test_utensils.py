@@ -1,5 +1,5 @@
 """
-Example: Use assert statements to test a module.
+Example unit tests.
 """
 import datetime
 import io
