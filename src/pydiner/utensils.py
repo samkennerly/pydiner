@@ -17,9 +17,9 @@ def achtung(*args, file=stderr):
     print(clock(), WARNING, *args, file=file, flush=True)
 
 
-def batcher(seq, maxlen, batch=tuple, taker=islice):
+def batcher(seq, n, joined=tuple, sliced=islice):
     """ Iterator[tuple]: Length-limited batches taken from iterable. """
-    return takewhile(len, (batch(taker(x, maxlen)) for x in repeat(iter(seq))))
+    return takewhile(len, (joined(sliced(x, n)) for x in repeat(iter(seq))))
 
 
 def clock(timespec="seconds"):
