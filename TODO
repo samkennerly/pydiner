@@ -1,6 +1,5 @@
 ASAP:
-  - delete old scripts and profiles
-  - double-check .gitignore
+  - double-check .gitignore for var/ and test/ files
   - simplify tests. move tmp/ outside test/ folder.
   - finish README
   - release 1.0.0

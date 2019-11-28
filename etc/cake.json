@@ -1,6 +1,0 @@
-{
-    "batchsize": 1000,
-    "fountain": {"fizz": 3, "buzz": 5},
-    "outpath": "var/cake.txt",
-    "range": {"start": 1, "stop": 9001, "step": 1}
-}
