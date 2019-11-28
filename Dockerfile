@@ -10,8 +10,11 @@ WORKDIR "${WORKDIR}"
 RUN apt-get -y update && apt-get -y install less tree zip
 
 # Install Python packages
-COPY ["requirements.txt","."]
+COPY ["requirements.txt", "."]
 RUN pip install --upgrade pip && pip install --requirement requirements.txt
+
+# Copy repo files (unless .dockerignore)
+COPY [".", "${WORKDIR}"]
 
 # Find src/ code and bin/ scripts
 ENV PYTHONPATH="${WORKDIR}/src" \
