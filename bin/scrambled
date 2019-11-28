@@ -2,36 +2,43 @@
 
 from argparse import ArgumentParser
 from datetime import datetime
+from functools import partial
 from itertools import permutations
 from pathlib import Path
+from sys import stdout as STDOUT
 
 from pydiner import REPO, achtung, batcher, clock, echo, fullpath, getparams
 
-def argparsed():
-    """ dict: Parameters parsed from command-line inputs. """
-    parser = ArgumentParser()
-    parser.description = """
-        Find all derangements of characters in WORDS.
-        Save results (as lines of text) to OUTPATH.
-        If no OUTPATH, then print results to STDOUT.
-    """
-    arg = parser.add_argument
-    arg('words', nargs='+', type=str, help="scramble these strings")
-    arg('-n', '--nbatch', default=1_000, type=int, help="maximum batch size")
-    arg('-o', '--output', type=Path, help="save output to this file")
-    #arg('-p', '--profile', type=Path, help="read inputs from this file")
-    arg('-q', '--quiet', action="store_true", help="no log messages to STDOUT")
+NBATCH = 1_000
+OUTPATH = None
+PROFILE = None
+QUIET = False
+WORD = ''
 
-    return vars(parser.parse_args())
+def argparams():
+    """ dict: Parameters parsed from command-line inputs. """
+    parsed = ArgumentParser()
+    parsed.description = """Find all derangements of characters in WORD."""
+    arg = parsed.add_argument
+    arg('word', nargs='?', type=str, help="scramble this string")
+    arg('-n', '--nbatch', type=int, help="maximum batch size")
+    arg('-o', '--outpath', type=Path, help="save output to this file")
+    arg('-p', '--profile', type=str, help="use pre-configured defaults")
+    arg('-q', '--quiet', action="store_true", help="no log messages to STDOUT")
+    parsed = vars(parsed.parse_args())
+
+    return { k:v for k,v in parsed.items() if v is not None }
 
 def batchwrite(lines, path, nbatch=1):
-    """ int: Write lines of text to a file lazily. Return number of chars written. """
-    batches = batcher(lines, nbatch, joined="\n".join)
+    """ int: Write lines of text to file in batches. Return line count. """
+    joined = "\n".join
     with open(path, 'w') as file:
-        return sum(map(file.write, batches))
+        write = partial(print, file=file)
+        return sum( write(joined(x)) or len(x) for x in batcher(lines, nbatch) )
 
 def countprint(lines):
-    raise NotImplementedError
+    """ int: Print lines of text to STDOUT. Return line count. """
+    return sum( 1 for _ in map(print, lines) )
 
 def derangements(chars):
     """ Iterator[str]: Permutations of chars which move every element. """
@@ -40,31 +47,36 @@ def derangements(chars):
 
     return lines
 
-params = argparsed()
-#maxlen = params['maxlen']
-nbatch = params['nbatch']
-output = params['output']
-words = params['words']
-quiet = params['quiet']
+def expected(chars):
+    """ int: Rough estimate of output size. """
+    return round(0.4 * factorial(len(chars)))
 
-if not quiet:
-    t = datetime.now()
-    echo("Batch size:", nbatch)
+def factorial(n):
+    """ int: n! if n is a non-negative integer, else probably wrong. """
+    return n * factorial(n - 1) if (n > 1) else 1
 
-chars = " ".join(words)
-lines = derangements(chars)
-nchars = batchwrite(lines, output, nbatch)
+def main(nbatch=NBATCH, outpath=OUTPATH, quiet=QUIET, word=WORD):
 
-if not quiet:
-    t = datetime.now() - t
-    echo("Characters written:", nchars)
-    echo("Elapsed time:", t)
+    elines = expected(word)
+    if elines > 1e7:
+        achtung("This might take a while...")
 
+    if not quiet:
+        t = datetime.now()
+        echo(f"Write derangements of '{word}' to {outpath or 'STDOUT'}")
 
-# Some newlines are missing!
+    lines = derangements(word)
+    nlines = batchwrite(lines, outpath, nbatch) if outpath else countprint(lines)
 
+    if not quiet:
+        echo(f"{elines} derangements expected")
+        echo(f"{nlines} derangements found")
+        echo(f"{datetime.now() - t} time elapsed")
 
+if __name__ == '__main__':
+    params = argparams()
+    profile = params.pop('profile', PROFILE)
+    if profile:
+        params = getparams(profile, **params)
 
-
-
-
+    main(**params)
