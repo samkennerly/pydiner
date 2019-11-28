@@ -1,17 +1,11 @@
 """
-Example: Create test fixtures for test modules.
+Example test fixtures: constants, cleanup methods, etc.
 """
-import pathlib
+from pathlib import Path
 
-TMPDIR = pathlib.Path(__file__).parent.resolve() / "tmp"
+REPO = Path(__file__).resolve().parent.parent
+TMPDIR = REPO / 'tmp'
 
-
-def cleartmp():
-    if TMPDIR.exists():
-        print("Clear", TMPDIR)
-        paths = TMPDIR.glob("**/*")
-        paths = set(x if x.is_dir() else x.unlink() for x in paths)
-        paths = set(x.rmdir() for x in paths if x is not None)
-    else:
-        print("mkdir", TMPDIR)
-        TMPDIR.mkdir()
+def bigprint(*args):
+    """ None: Fancy print function. """
+    print("", 10 * '-', *args, "", sep="\n")
