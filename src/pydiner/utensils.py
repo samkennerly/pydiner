@@ -9,6 +9,7 @@ from pathlib import Path
 from sys import stderr
 
 REPO = Path(__file__).resolve().parent.parent.parent
+PROFILES = REPO / 'etc'
 WARNING = "\x1b[93m* ACHTUNG *\x1b[0m"
 
 
@@ -42,12 +43,11 @@ def fullpath(path=""):
     return Path.cwd() / Path(path).expanduser()
 
 
-def getparams(profile):
-    """ dict, list, or None: Read parameters from JSON file if it exists. """
-    path = (REPO / "etc" / profile).with_suffix(".json")
-    if path.is_file():
-        with open(path, "r") as f:
-            return readjson(f)
+def getparams(profile, **kwargs):
+    """ dict: kwargs with default values from a pre-saved profile. """
+    profile = (PROFILES / profile).with_suffix(".json")
+    with open(profile) as file:
+        return {**readjson(file), **kwargs}
 
 
 def hello(obj):
