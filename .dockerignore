@@ -1,1 +1,6 @@
-.gitignore
+# Dotfiles and dotfolders
+**/.*
+
+# Variables
+var/*
+!var/small.txt
