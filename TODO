@@ -1,6 +1,4 @@
 ASAP:
-  - simplify tests. move tmp/ outside test/ folder.
-  - double-check .gitignore for var/ and tmp/ files
   - finish README
   - release 1.0.0
 
