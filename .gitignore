@@ -1,6 +1,6 @@
-# Variable data
+# Variables
 /var/
-!/var/cake.txt
+!/var/small.txt
 
 # Apple debris
 .DS_Store*
@@ -23,6 +23,3 @@ jupyter_notebook_config.*
 .tox/
 .venv/
 __pycache__/
-
-# Sublime Text history
-*.sublime-workspace
