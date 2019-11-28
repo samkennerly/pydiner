@@ -1,9 +1,7 @@
 ASAP:
-  - bin/scrambled
-  - delete old scripts
+  - delete old scripts and profiles
   - double-check .gitignore
   - simplify tests. move tmp/ outside test/ folder.
-  - autoformat with Black
   - finish README
   - release 1.0.0
 

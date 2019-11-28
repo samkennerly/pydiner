@@ -9,7 +9,7 @@ from pathlib import Path
 from sys import stderr
 
 REPO = Path(__file__).resolve().parent.parent.parent
-PROFILES = REPO / 'etc'
+PROFILES = REPO / "etc"
 WARNING = "\x1b[93m* ACHTUNG *\x1b[0m"
 
 
@@ -60,4 +60,3 @@ def iterlines(*paths):
     for path in paths:
         with open(path) as file:
             yield from file
-

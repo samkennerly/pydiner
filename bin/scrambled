@@ -13,47 +13,54 @@ NBATCH = 1_000
 OUTPATH = None
 PROFILE = None
 QUIET = False
-WORD = ''
+WORD = ""
+
 
 def argparams():
     """ dict: Parameters parsed from command-line inputs. """
     parsed = ArgumentParser()
     parsed.description = """Find all derangements of characters in WORD."""
     arg = parsed.add_argument
-    arg('word', nargs='?', type=str, help="scramble this string")
-    arg('-n', '--nbatch', type=int, help="maximum batch size")
-    arg('-o', '--outpath', type=Path, help="save output to this file")
-    arg('-p', '--profile', type=str, help="use pre-configured defaults")
-    arg('-q', '--quiet', action="store_true", help="no log messages to STDOUT")
+    arg("word", nargs="?", type=str, help="scramble this string")
+    arg("-n", "--nbatch", type=int, help="maximum batch size")
+    arg("-o", "--outpath", type=Path, help="save output to this file")
+    arg("-p", "--profile", type=str, help="use pre-configured defaults")
+    arg("-q", "--quiet", action="store_true", help="no log messages to STDOUT")
     parsed = vars(parsed.parse_args())
 
-    return { k:v for k,v in parsed.items() if v is not None }
+    return {k: v for k, v in parsed.items() if v is not None}
+
 
 def batchwrite(lines, path, nbatch=1):
     """ int: Write lines of text to file in batches. Return line count. """
     joined = "\n".join
-    with open(path, 'w') as file:
+    with open(path, "w") as file:
         write = partial(print, file=file)
-        return sum( write(joined(x)) or len(x) for x in batcher(lines, nbatch) )
+        return sum(write(joined(x)) or len(x) for x in batcher(lines, nbatch))
+
 
 def countprint(lines):
     """ int: Print lines of text to STDOUT. Return line count. """
-    return sum( 1 for _ in map(print, lines) )
+    return sum(1 for _ in map(print, lines))
+
 
 def derangements(chars):
     """ Iterator[str]: Permutations of chars which move every element. """
     lines = map("".join, permutations(sorted(chars)))
-    lines = ( x for x in lines if not any( y == z for y,z in zip(x, chars) ) )
+    lines = (x for x in lines if not any(y == z for y, z in zip(x, chars)))
 
     return lines
+
 
 def expected(chars):
     """ int: Rough estimate of output size. """
     return round(0.4 * factorial(len(chars)))
 
+
 def factorial(n):
     """ int: n! if n is a non-negative integer, else probably wrong. """
     return n * factorial(n - 1) if (n > 1) else 1
+
 
 def main(nbatch=NBATCH, outpath=OUTPATH, quiet=QUIET, word=WORD):
 
@@ -73,9 +80,10 @@ def main(nbatch=NBATCH, outpath=OUTPATH, quiet=QUIET, word=WORD):
         echo(f"{nlines} derangements found")
         echo(f"{datetime.now() - t} time elapsed")
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     params = argparams()
-    profile = params.pop('profile', PROFILE)
+    profile = params.pop("profile", PROFILE)
     if profile:
         params = getparams(profile, **params)
 
