@@ -5,7 +5,7 @@ from .utensils import (
     REPO,
     achtung,
     batcher,
-    clock,
+    clockstr,
     distinct,
     echo,
     fullpath,

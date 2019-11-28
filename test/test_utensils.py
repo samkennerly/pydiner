@@ -17,9 +17,9 @@ def test_batcher(nseq=100, nbatch=23, joined=list):
     assert joined(batches) == subseqs, "value mismatch"
 
 
-def test_clock(maxerr=timedelta(seconds=1)):
+def test_clockstr(maxerr=timedelta(seconds=1)):
     now = datetime.utcnow()
-    stamped = datetime.fromisoformat(pydiner.clock())
+    stamped = datetime.fromisoformat(pydiner.clockstr())
 
     assert abs(stamped - now) < maxerr, f"timestamps off by more than {maxerr}"
 

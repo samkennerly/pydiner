@@ -15,7 +15,7 @@ WARNING = "\x1b[93m* ACHTUNG *\x1b[0m"
 
 def achtung(*args, file=stderr):
     """ None: Print timestamp and error message(s) to STDERR. """
-    print(clock(), WARNING, *args, file=file, flush=True)
+    print(clockstr(), WARNING, *args, file=file, flush=True)
 
 
 def batcher(seq, n, joined=tuple, sliced=islice):
@@ -23,7 +23,7 @@ def batcher(seq, n, joined=tuple, sliced=islice):
     return takewhile(len, (joined(sliced(x, n)) for x in repeat(iter(seq))))
 
 
-def clock(timespec="seconds"):
+def clockstr(timespec="seconds"):
     """ str: UTC date and time and ISO format. """
     return datetime.utcnow().isoformat(sep=" ", timespec=timespec)
 
@@ -35,7 +35,7 @@ def distinct(seq):
 
 def echo(*args, file=None):
     """ None: Print timestamp and log message(s) to STDOUT. """
-    print(clock(), *args, file=file, flush=True)
+    print(clockstr(), *args, file=file, flush=True)
 
 
 def fullpath(path=""):
