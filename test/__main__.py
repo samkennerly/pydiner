@@ -1,14 +1,15 @@
 """
 Example: Discover and run tests in each module.
 """
-import shutil
+from .fixtures import TMPDIR, bigprint, cleartmp, errors
+from . import test_utensils
 
-from . import *
+cleartmp()
 
-print("Run", __file__)
-fixtures.TMPDIR.mkdir(exist_ok=True)
+failed = dict()
+failed.update(errors(test_utensils))
+bigprint(**failed)
+print(f"{len(failed)} FAILURES" if failed else "OK")
 
-test_module(test_utensils)
-
-shutil.rmtree(fixtures.TMPDIR)
-print("\nExit", __file__)
+cleartmp()
+TMPDIR.rmdir()

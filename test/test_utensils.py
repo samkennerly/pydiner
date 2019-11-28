@@ -1,49 +1,48 @@
 """
 Example unit tests.
 """
-import datetime
-import io
-import pathlib
+from datetime import datetime, timedelta
+from io import StringIO
+from pathlib import Path
 
 import pydiner
 from . import fixtures
 
 
-def test_batcher():
-    n, maxlen = 10, 3
-    testvals = list(range(n))
-    batches = [testvals[i : i + maxlen] for i in range(0, n, maxlen)]
-    output = pydiner.batcher(testvals, maxlen, batch=list)
+def test_batcher(nseq=100, nbatch=23, joined=list):
+    seq = joined(range(nseq))
+    subseqs = [seq[i : i + nbatch] for i in range(0, nseq, nbatch)]
+    batches = pydiner.batcher(seq, nbatch, joined=joined)
 
-    assert list(output) == batches
-
-
-def test_clock():
-    now = datetime.datetime.utcnow()
-    stamped = datetime.datetime.fromisoformat(pydiner.clock())
-    longtime = datetime.timedelta(seconds=1)
-
-    assert abs(stamped - now) < longtime
+    assert joined(batches) == subseqs, "value mismatch"
 
 
-def test_distinct():
-    assert "".join(pydiner.distinct("spam" * 100)) == "spam"
+def test_clock(maxerr=timedelta(seconds=1)):
+    now = datetime.utcnow()
+    stamped = datetime.fromisoformat(pydiner.clock())
+
+    assert abs(stamped - now) < maxerr, f"timestamps off by more than {maxerr}"
+
+
+def test_distinct(n=1000, seq="spam", joined="".join):
+    seq = joined(seq)
+    vals = pydiner.distinct(n * seq)
+
+    assert joined(vals) == seq, "value mismatch"
 
 
 def test_fullpath():
     absolute = "/spam"
     relative = "spam/eggs.txt"
 
-    assert pydiner.fullpath(absolute) == pathlib.Path(absolute)
-    assert pydiner.fullpath(relative) == pathlib.Path.cwd() / relative
+    assert pydiner.fullpath(absolute) == Path(absolute), "bad absolute path"
+    assert pydiner.fullpath(relative) == Path.cwd() / relative, "bad relative path"
 
 
 def test_iterlines():
     folder = fixtures.TMPDIR
     lines = [f"{i} spam\n" for i in range(10)]
     paths = [folder / f"spam{i}.txt" for i in range(3)]
-
-    fixtures.cleartmp()
     for path in paths:
         with open(path, "w") as f:
             f.writelines(lines)
@@ -51,7 +50,7 @@ def test_iterlines():
     lines = len(paths) * lines
     output = pydiner.iterlines(*paths)
 
-    assert list(output) == lines
+    assert list(output) == lines, "value mismatch"
 
 
 def test_loggers():
@@ -60,6 +59,6 @@ def test_loggers():
     outstr = " ".join(map(str, inputs)) + "\n"
 
     for meth in methods:
-        with io.StringIO() as stream:
+        with StringIO() as stream:
             meth(*inputs, file=stream)
-            assert stream.getvalue().endswith(outstr)
+            assert stream.getvalue().endswith(outstr), "value mismatch"
