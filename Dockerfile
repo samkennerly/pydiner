@@ -13,11 +13,11 @@ RUN apt-get -y update && apt-get -y install less tree zip
 COPY ["requirements.txt", "."]
 RUN pip install --upgrade pip && pip install --requirement requirements.txt
 
-# Copy repo files (unless .dockerignore)
-COPY [".", "${WORKDIR}"]
-
 # Find src/ code and bin/ scripts
 ENV PYTHONPATH="${WORKDIR}/src" \
     PATH="${WORKDIR}/bin:${PATH}"
+
+# Copy repo files (unless .dockerignore)
+COPY [".", "${WORKDIR}"]
 
 CMD ["/bin/bash"]
