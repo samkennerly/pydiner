@@ -7,7 +7,7 @@ ARG WORKDIR=/context
 WORKDIR "${WORKDIR}"
 
 # Install system packages
-RUN apt-get -y update && apt-get -y install less tree zip
+RUN apt-get -y update && apt-get -y install less tree vim
 
 # Install Python packages
 COPY ["requirements.txt", "."]
