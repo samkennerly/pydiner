@@ -1,68 +1,68 @@
-#!/usr/bin/env zsh
-# Build and run Python development containers.
+#!/usr/bin/env sh
+# Build and run temporary containers.
 
-CONTEXT="$PWD"                    # Path to build context
-NAMETAG="$(basename "$CONTEXT")"  # Name of image to build
-PKGFILE="requirements.txt"        # List of packages to install
-WORKDIR="/context"                # Working directory inside container
+CONTEXT=$PWD                    # Build from CONTEXT folder
+TAGBASE=$(basename "$CONTEXT")  # Name image TAGBASE:sometag
+PKGFILE="requirements.txt"      # Install packages from PKGFILE
+WORKDIR="/context"              # Copy/mount files to WORKDIR in container
 
 help() {
   echo "Run disposable containers built from $CONTEXT"
   echo
   echo "COMMANDS"
-  echo "alamode         Don't make me think, just do all the things"
-  echo "bake            Build $NAMETAG image from $CONTEXT"
-  echo "clean           Delete $NAMETAG containers and leftovers"
-  echo "debug [SCRIPT]  Run SCRIPT with interactive debugger"
-  echo "eighty_six      Delete $NAMETAG image, containers, and leftovers"
-  echo "freeze          Update $PKGFILE and rebuild image"
-  echo "help            Show commands, examples, and Docker objects"
-  echo "runit [CMD]     Run CMD in an interactive $NAMETAG container"
-  echo "serve [CMD]     Same as runit, but with $WORKDIR mounted from $CONTEXT"
+  echo "alamode [TAG] [CMD]   Bake $TAGBASE:TAG, freeze it, and serve CMD"
+  echo "bake [TAG]            Build $TAGBASE:TAG image from $CONTEXT"
+  echo "clean                 Delete all $TAGBASE containers and Docker leftovers"
+  echo "debug [TAG] [SCRIPT]  Run Python debugger in $TAGBASE:TAG image"
+  echo "eightysix [TAG]       Delete $TAGBASE:TAG image, containers, and leftovers"
+  echo "freeze [TAG]          Update $PKGFILE and rebuild $TAGBASE:TAG"
+  echo "help                  Show commands, examples, and Docker objects"
+  echo "runit [TAG] [CMD]     Run CMD in an interactive $TAGBASE:TAG container"
+  echo "serve [TAG] [CMD]     Same as runit, but with $WORKDIR mounted from $CONTEXT"
   echo
   echo "EXAMPLES"
-  echo "cd path/to/my/project"
-  echo "./kitchen alamode"
-  echo "./kitchen runit ls -la"
-  echo "./kitchen serve soda --fizz=4 0 10"
-  echo "./kitchen debug src/pydiner/utensils.py"
+  echo "./kitchen bake latest"
+  echo "./kitchen serve latest"
+  echo "./kitchen serve latest python -m pdb"
   echo
-  echo "DOCKER OBJECTS"
+  echo "INVENTORY"
   echo "---- Images ----" && docker image ls | sort
   echo "---- Volumes ----" && docker volume ls | sort
   echo "---- Networks ----" && docker network ls
   echo "---- Containers ----" && docker ps --all
 }
 alamode() {
-  bake && freeze && serve "$@"
+  bake "$1" && freeze "$1" && serve "$@"
 }
 bake() {
   touch "$PKGFILE" &&
-  docker build --tag "$NAMETAG" --build-arg WORKDIR="$WORKDIR" "$CONTEXT" &&
+  docker build --tag "$(tag $1)" --build-arg WORKDIR="$WORKDIR" "$CONTEXT" &&
   docker image prune --force
 }
 clean() {
-  docker ps --quiet --filter ancestor="$NAMETAG" | xargs docker rm --force &&
-  docker system prune "$@"
+  docker ps --quiet --filter ancestor="$TAGBASE" | xargs docker rm --force &&
+  docker system prune --force
 }
 debug() {
-  serve python -m pdb "$@"
+  serve "${1:-latest}" python -m pdb "${@:2}"
 }
-eighty_six() {
-  docker rmi --force "$NAMETAG" &&
-  clean "$@"
+eightysix() {
+  clean && docker rmi --force "$(tag $1)" && docker image prune --force
 }
 freeze() {
-  docker run --rm "$NAMETAG" pip freeze --exclude-editable > "$PKGFILE" &&
-  bake
+  docker run --rm "$(tag $1)" pip freeze --exclude-editable > "$PKGFILE" && bake "$1"
 }
 runit() {
-  docker run --rm --interactive --tty "$NAMETAG" "$@"
+  docker run --rm --interactive --tty "$(tag $1)" "${@:2}"
 }
 serve() {
   docker run --rm --interactive --tty \
     --volume "${CONTEXT}:${WORKDIR}:delegated" \
-    --hostname "${NAMETAG}" \
-    "$NAMETAG" "$@"
+    --hostname "${TAGBASE}" \
+    "$(tag $1)" "${@:2}"
 }
+tag() {
+  echo "$TAGBASE:${1-latest}"
+}
+
 if [ $# -eq 0 ]; then help; else "$@"; fi
