@@ -23,7 +23,7 @@ help() {
   echo "EXAMPLES"
   echo "./kitchen bake latest"
   echo "./kitchen serve latest"
-  echo "./kitchen serve latest python -m pdb"
+  echo "./kitchen serve latest python -m this"
   echo
   echo "INVENTORY"
   echo "---- Images ----" && docker image ls | sort
