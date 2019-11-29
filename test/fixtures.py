@@ -21,12 +21,20 @@ def bigprint(**kwargs):
         print(f"{k}: {repr(v)}")
 
 
-def cleartmp():
-    """ None: Delete and recreate temporary folder. """
-    if TMPDIR.exists():
+def cleartmp(meth):
+    """ function: Decorator to create and destroy TMPDIR. """
+
+    def wrapped(*args, **kwargs):
+        if TMPDIR.exists():
+            rmtree(TMPDIR)
+
+        TMPDIR.mkdir()
+        output = meth(*args, **kwargs)
         rmtree(TMPDIR)
 
-    TMPDIR.mkdir()
+        return output
+
+    return wrapped
 
 
 def do(meth):
