@@ -13,7 +13,7 @@ help() {
   echo "alamode [TAG] [CMD]   Bake $TAGBASE:TAG, freeze it, and serve CMD"
   echo "bake [TAG]            Build $TAGBASE:TAG image from $CONTEXT"
   echo "clean                 Delete all $TAGBASE containers and Docker leftovers"
-  echo "debug [TAG] [SCRIPT]  Serve Python debugger in a $TAGBASE:TAG container"
+  echo "debug TAG SCRIPT      Debug SCRIPT in a $TAGBASE:TAG container"
   echo "eightysix [TAG]       Delete $TAGBASE:TAG image, containers, and leftovers"
   echo "freeze [TAG]          Update $PKGFILE and rebuild $TAGBASE:TAG image"
   echo "help                  Show commands, examples, and Docker inventory"
