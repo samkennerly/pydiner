@@ -56,27 +56,31 @@ Each time you bake an image, Docker checks if `requirements.txt` has changed.
 If so, then it uses [pip]() to install all packages and their dependencies.
 (See the [Dockerfile](Dockerfile) for details.)
 
-Use `./kitchen freeze` if you need to know *exactly* what `pip` installed,
-or if you want [reproducible builds]() for your project.
+Run `./kitchen freeze` if you need to know *exactly* what was installed,
+or you want [reproducible builds]() for your project.
 Docker will rebuild the image, run `pip freeze`, and save the output.
 
 Freezing **overwrites** anything that was in `requirements.txt`.
 
 ### serve with fresh files
 
-Files <q>baked</q> into an image do *not* update themselves when the originals change.
+Images are [immutable]().
+Files copied into images do not update when the originals change.
+
+Run `./kitchen serve` to run a container with access to the original files.
+Docker will [bind mount]() the current working folder as `/context`.
+Files <q>baked</q> into `/context` will be [shadowed]() by these <q>fresh</q> files.
 
 
-The `kitchen serve` command [mounts]() the current working directory
+Mounted files are **not** copies.
+If a mounted file dies in a container, it dies in the real world.
 
 
-
-
-### cleanup
+### nuke the entire site from orbit
 
 Run `exit` or hit *CTRL-D* to exit a container.
-All `pydiner` containers [self-destruct]() when they exit.
 
+Pydiner containers [self-destruct]() when they exit. It's the only way to be sure.
 
 
 ## contents
