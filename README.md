@@ -44,7 +44,7 @@ To start a new project:
 # Show which files were baked into the pydiner:monty image
 ./kitchen runit monty tree
 
-# Delete the image, containers, and leftovers
+# Delete the image, its containers, and any leftovers
 ./kitchen eightysix monty
 ```
 Typing `./kitchen` before each command is not necessary if the kitchen is [sourced]().
@@ -59,9 +59,12 @@ Pydiner includes examples of common Python project ingredients:
 - [test/](test) is an [executable package]() which runs tests.
 - [var/](var) contains files output by the script(s).
 
-Pydiner's [folder structure]() is loosely based on a C++ template from [hiltmon.com](https://hiltmon.com/blog/2013/07/03/a-simple-c-plus-plus-project-structure/).
+The [folder structure]() is loosely based on a C++ template from [hiltmon.com](https://hiltmon.com/blog/2013/07/03/a-simple-c-plus-plus-project-structure/).
 
-### kitchen functions
+### the kitchen script
+
+Pydiner's [kitchen](kitchen) defines [shell functions]() for running containers.
+Run `kitchen help` for details.
 
 `./kitchen bake` copies files from the the [build context]() into an image's `/context` folder.
 
@@ -84,12 +87,9 @@ Pydiner's [folder structure]() is loosely based on a C++ template from [hiltmon.
 - Any files baked into `/context` will be [shadowed]() by these <q>fresh</q> files.
 - Mounts are **not** copies. If a mounted file dies in a container, it dies in the real world.
 
-`./kitchen clean` deletes all [descendants]() of any `pydiner` image.
-
-- Run `exit` or hit *CTRL-D* to escape a running container.
-- Pydiner containers delete themselves after exiting.
-
 ## dependencies
+
+Pydiner does not require Python. It has one dependency:
 
 - Docker for [Linux]() or [Mac]() or [Windows]()
 
@@ -137,7 +137,7 @@ root@pydiner:/context# soda --fizz 2 --buzz 3 1 10
 1 Fizz  Buzz  Fizz  5 FizzBuzz  7 Fizz  Buzz
 ```
 
-## faq (UNDER CONSTRUCTION)
+## faq
 
 ### Let me out of this thing!
 
