@@ -56,11 +56,10 @@ def test_iterlines():
 
 
 def test_loggers():
-    methods = pydiner.achtung, pydiner.echo
     inputs = ["How about a nice game of", __file__, "?"]
-    outstr = " ".join(map(str, inputs)) + "\n"
+    outstr = " ".join( str(x) for x in inputs ) + "\n"
 
-    for meth in methods:
+    for meth in (pydiner.achtung, pydiner.echo):
         with StringIO() as stream:
             meth(*inputs, file=stream)
             assert stream.getvalue().endswith(outstr), "value mismatch"

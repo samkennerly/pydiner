@@ -10,7 +10,7 @@ from sys import stderr
 
 REPO = Path(__file__).resolve().parent.parent.parent
 PROFILES = REPO / "etc"
-WARNING = "\x1b[93m* ACHTUNG *\x1b[0m"
+WARNING = "\x1b[93m* WARNING *\x1b[0m"
 
 
 def achtung(*args, file=stderr):

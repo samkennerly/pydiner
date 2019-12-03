@@ -13,9 +13,8 @@ RUN pip install --upgrade pip && pip install --requirement /tmp/requirements.txt
 ARG WORKDIR=/context
 WORKDIR "${WORKDIR}"
 
-# Find src/ code and bin/ scripts
-ENV PYTHONPATH="${WORKDIR}/src" \
-    PATH="${WORKDIR}/bin:${PATH}"
+# Find bin/ scripts and src/ code
+ENV PATH="${WORKDIR}/bin:${PATH}" PYTHONPATH="${WORKDIR}/src"
 
 # Copy repo files (unless .dockerignore)
 COPY [".", "${WORKDIR}"]
