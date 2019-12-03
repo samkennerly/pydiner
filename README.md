@@ -9,7 +9,7 @@ Pydiner is a [template]() for a generic Python project which:
 - runs all code in [containers]() which [self-destruct]()
 - never installs software outside of its own Docker [images]()
 - never uses or modifies other Pythons, [Anaconda](), or [virtualenvs]()
-- lists [pinned versions]() of installed Python packages in `requirements.txt`
+- updates `requirements.txt` with [pinned versions]() of installed Python packages
 
 These rules are intended to minimize time spent in [dependency hell]().
 
@@ -47,7 +47,7 @@ To start a new project:
 # Delete the image, containers, and leftovers
 ./kitchen eightysix monty
 ```
-See the [examples](#examples) section for more examples.
+Typing `./kitchen` before each command is not necessary if the kitchen is [sourced]().
 
 ## contents
 
@@ -58,63 +58,36 @@ Pydiner includes examples of common Python project ingredients:
 - [src/](src) contains an importable [package]().
 - [test/](test) is an [executable package]() which runs tests.
 - [var/](var) contains files output by the script(s).
-- The [kitchen]()kitchen script builds and runs [development containers]().
 
 Pydiner's [folder structure]() is loosely based on a C++ template from [hiltmon.com](https://hiltmon.com/blog/2013/07/03/a-simple-c-plus-plus-project-structure/).
 
-### inspect the kitchen
+### kitchen functions
 
-The `kitchen` script contains [shell functions]() including:
+`./kitchen bake` copies files from the the [build context]() into an image's `/context` folder.
 
-- `./kitchen bake` builds (or rebuilds) a `pydiner:latest` Docker image.
-- `./kitchen freeze` updates `requirements.txt` with [pinned versions]().
-- `./kitchen serve` runs a `pydiner` container and [mounts]() the current folder.
-- `./kitchen clean` deletes all `pydiner` containers and Docker [leftovers]().
+- Edit the `Dockerfile` to choose which files are copied into images.
+- Files matching patterns in `.dockerignore` are never copied into images.
+- Each `pydiner` container gets an independent copy of the `/context` folder.
+- Files baked into an image do **not** update themselves when the originals change.
 
-Typing `./kitchen` is not necessary if the `kitchen` script is [sourced]().
+`./kitchen freeze` runs `pip freeze` and saves the output to `requirements.txt`.
 
-### bake images
+- When a new `pydiner` image is baked, it uses `pip` to install requirements.
+- On subsequent bakes, `pip` might not run again if `requirements.txt` is unchanged
+- Running `freeze` forces `pip` to install the same package versions every time.
+- Freezing **overwrites** anything that was in `requirements.txt`.
 
-Processes in a `pydiner` container have two ways to access files on your computer:
+`./kitchen serve` runs a container with the current folder [mounted]() as `/context`.
 
-- `./kitchen bake` copies the [build context]() into an image's `/context` folder.
-- `./kitchen serve` [mounts]() the current working folder as `/context`.
+- Images are [immutable](). Rebuilding is the only way to update baked-in files.
+- Running `serve` runs a new container with real-time access to the original files.
+- Any files baked into `/context` will be [shadowed]() by these <q>fresh</q> files.
+- Mounts are **not** copies. If a mounted file dies in a container, it dies in the real world.
 
-Docker ignores files which match patterns in the [.dockerignore](.dockerignore) file.
-Everything else in this repository is copied into each `pydiner` image.
-Each `pydiner` container gets an independent copy of these <q>baked-in</q> files.
-Containers can read, write and delete their own `/context` files without fear of damaging the originals.
+`./kitchen clean` deletes all [descendants]() of any `pydiner` image.
 
-Files baked into an image do **not** update themselves when the originals change.
-
-### freeze packages
-
-Each time you bake an image, Docker checks if `requirements.txt` has changed.
-If so, then it uses [pip]() to install all packages and their dependencies.
-(See the [Dockerfile](Dockerfile) for details.)
-
-Run `./kitchen freeze` if you need to know *exactly* what was installed,
-or you want [reproducible builds]() for your project.
-Docker will run `pip freeze`, save the output, and rebuild the image.
-
-Freezing **overwrites** anything that was in `requirements.txt`.
-
-### serve containers
-
-Images are [immutable]().
-Files copied into images do not update when the originals change.
-
-Run `./kitchen serve` to run a container with access to the original files.
-Docker will [bind mount]() the current working folder as `/context`.
-Files <q>baked</q> into `/context` will be [shadowed]() by these <q>fresh</q> files.
-
-Mounted files are **not** copies.
-If a mounted file dies in a container, it dies in the real world.
-
-### clean everything
-
-Run `exit` or hit *CTRL-D* to exit a container.
-Pydiner containers [self-destruct]() when they exit.
+- Run `exit` or hit *CTRL-D* to escape a running container.
+- Pydiner containers delete themselves after exiting.
 
 ## dependencies
 
@@ -166,14 +139,18 @@ root@pydiner:/context# soda --fizz 2 --buzz 3 1 10
 
 ## faq (UNDER CONSTRUCTION)
 
+### Let me out of this thing!
+
+Hit *CTRL-D* to exit a container.
+
 ### How do I install PyDiner?
 
 Don't. Use it as a [template]() for a new repository.
 
 ### Can I run containers in the background?
 
-The `kitchen` script only runs [interactive] containers.
-See the [Docker run reference] for other options.
+Yes, but not with the `kitchen` script.
+See the [Docker run reference]().
 
 ### Do I have to run as root inside a container?
 
@@ -181,21 +158,13 @@ Not if you create a `USER`. See the [Dockerfile reference] for details.
 
 ### What testing framework does `pydiner` use?
 
-None. The [test] folder is an [executable package]. To run all tests:
-```bash
-# from the top-level repo folder
-./kitchen serve latest python -m test
-
-# from inside a container
-python -m test
-```
-When possible, `pydiner` tries to follow [pytest] conventions.
+None, but it has been tested with [pytest]() to ensure compatibility.
 
 ### What logging framework does `pydiner` use?
 
-None. Messages are [streamed](https://12factor.net/logs) and never saved.
-`achtung()` prints errors to `STDERR`.
-`echo()` prints logs to `STDOUT`.
+[None](https://12factor.net/logs).
+Calling `achtung()` prints to `STDERR`.
+Calling `echo()` prints to `STDOUT`.
 
 ### What are some other Python project templates?
 
