@@ -24,19 +24,47 @@ To start a new project:
 4. Edit `requirements.txt` to choose Python packages to install with `pip`.
 5. Run `./kitchen help` to see available commands and Docker objects.
 
-Remember to `cd` to this folder before running `kitchen` commands.
+Open a terminal, `cd` to this folder, and run these commands:
+```
+# Build a pydiner:dirty image
+./kitchen bake dirty
 
-### prepare the kitchen
+# Update requirements.txt and rebuild pydiner:dirty
+./kitchen freeze dirty
 
-The `kitchen` script contains [shell functions]() for running [dev containers]().
+# Run all tests in a pydiner:latest container
+./kitchen runit dirty python -m test
+
+# Run a pydiner:dirty container, mount $PWD, and run a script
+./kitchen serve dirty scrambled eggs
+
+# Delete the image, container, and any leftovers
+./kitchen eightysix dirty
+```
+Scroll down for more examples.
+
+## contents
+
+Pydiner includes small examples of common Python project ingredients:
+
+- [bin/](bin) contains the `scrambled` script.
+- [etc/](etc) contains configuration files for the script.
+- [src/](src) contains the `pydiner` [package]().
+- [test/](test) contains automated [unit tests]() for the package.
+- The [kitchen]()kitchen script builds and runs [development containers]().
+
+Pydiner's [folder structure]() is loosely based on a C++ template from [hiltmon.com](https://hiltmon.com/blog/2013/07/03/a-simple-c-plus-plus-project-structure/).
+
+The `kitchen` script contains [shell functions]() including:
 
 - `./kitchen bake` builds (or rebuilds) a `pydiner:latest` Docker image.
 - `./kitchen freeze` updates `requirements.txt` with [pinned versions]().
 - `./kitchen serve` runs a `pydiner` container and [mounts]() the current folder.
+- `./kitchen clean` deletes all `pydiner` containers and Docker [leftovers]().
 
 Typing `./kitchen` is not necessary if the `kitchen` script is [sourced]().
 
-### bake an image
+### bake images
 
 Processes in a `pydiner` container have two ways to access files on your computer:
 
@@ -58,11 +86,11 @@ If so, then it uses [pip]() to install all packages and their dependencies.
 
 Run `./kitchen freeze` if you need to know *exactly* what was installed,
 or you want [reproducible builds]() for your project.
-Docker will rebuild the image, run `pip freeze`, and save the output.
+Docker will run `pip freeze`, save the output, and rebuild the image.
 
 Freezing **overwrites** anything that was in `requirements.txt`.
 
-### serve with fresh files
+### serve containers
 
 Images are [immutable]().
 Files copied into images do not update when the originals change.
@@ -71,39 +99,21 @@ Run `./kitchen serve` to run a container with access to the original files.
 Docker will [bind mount]() the current working folder as `/context`.
 Files <q>baked</q> into `/context` will be [shadowed]() by these <q>fresh</q> files.
 
-
 Mounted files are **not** copies.
 If a mounted file dies in a container, it dies in the real world.
 
-
-### nuke the entire site from orbit
+### clean everything
 
 Run `exit` or hit *CTRL-D* to exit a container.
-
-Pydiner containers [self-destruct]() when they exit. It's the only way to be sure.
-
-
-## contents
-
-### `bin` scripts
-### `etc` config files
-### `src/pydiner` package
-### `test` package
-automated [unit tests] for the `pydiner` package
-
-[Hiltmon](https://hiltmon.com/blog/2013/07/03/a-simple-c-plus-plus-project-structure/)
+Pydiner containers [self-destruct]() when they exit.
 
 ## dependencies
 
-- Docker for [Linux] or [Mac] or [Windows]
+- Docker for [Linux]() or [Mac]() or [Windows]()
 
-Windows users might need to edit the [kitchen] script for [path compatibility].
+Windows users may need to edit the [kitchen]() script for [path compatibility]().
 
-## examples
-
-
-## UNDER CONSTRUCTION
-
+## examples (UNDER CONSTRUCTION)
 
 If everything worked, your terminal should look like this:
 ```bash
@@ -145,59 +155,20 @@ root@pydiner:/context# soda --fizz 2 --buzz 3 1 10
 1 Fizz  Buzz  Fizz  5 FizzBuzz  7 Fizz  Buzz
 ```
 
-### think inside the box
-
-For the most part, what happens inside a container stays inside a container.
-You can move fast and break things with no lasting consequences.
-After you `exit`, Docker cleans up your mess by destroying the container.
-
-There are **three dangerous exceptions**:
-
-1. The `/context` folder is your real project folder. It is *not* a copy.
-2. On Linux machines, containers have [root access] to your project folder.
-3. Containers can [connect to the internet] by default.
-
-If this is a problem, then see the [faq] for workarounds.
-
-|                               |                                       |
-|-------------------------------|---------------------------------------|
-| show [kitchen] help           | `./kitchen help`                      |
-| build a Docker image          | `./kitchen bake`                      |
-| show all Docker objects       | `./kitchen carte`                     |
-| update [requirements.txt]     | `./kitchen freeze`                    |
-| start an interactive shell    | `./kitchen serve`                     |
-| start an interactive Python   | `./kitchen serve python`              |
-| run [bin/soda] with arguments | `./kitchen serve soda --fizz=3 0 10`  |
-| debug [bin/cake] with [pdb]   | `./kitchen debug cake`               |
-| delete image and leftovers    | `./kitchen eighty_six`                |
-
-
-## faq
+## faq (UNDER CONSTRUCTION)
 
 ### How do I install PyDiner?
 
-Don't. Use it as a [template].
-
-### Do I have to run as root inside a container?
-
-Not if you edit the [Dockerfile] to create another user.
-See the [Dockerfile reference] for details.
-
-### What is the `.dockerignore` file?
-
-Files and folders listed in `.dockerignore` are *not* copied into the `pydiner` image.
-
-- Secrets (passwords, SSH keys, etc.) can be read by anyone with access to the image.
-- Large files and `.git` folders waste disk space and build time.
--
-
-Note that files outside the [build context] cannot be baked into an image.
-The `kitchen` script uses your current working directory as context.
+Don't. Use it as a [template]() for a new repository.
 
 ### Can I run containers in the background?
 
 The `kitchen` script only runs [interactive] containers.
 See the [Docker run reference] for other options.
+
+### Do I have to run as root inside a container?
+
+Not if you create a `USER`. See the [Dockerfile reference] for details.
 
 ### What testing framework does `pydiner` use?
 
@@ -213,9 +184,9 @@ When possible, `pydiner` tries to follow [pytest] conventions.
 
 ### What logging framework does `pydiner` use?
 
-None. Log messages are [streamed](https://12factor.net/logs) and never saved.
-The `pydiner.achtung()` method prints errors to [STDERR]().
-The `pydiner.echo()` method prints other logs to [STDOUT]().
+None. Messages are [streamed](https://12factor.net/logs) and never saved.
+`achtung()` prints errors to `STDERR`.
+`echo()` prints logs to `STDOUT`.
 
 ### What are some other Python project templates?
 
@@ -225,61 +196,6 @@ The `pydiner.echo()` method prints other logs to [STDOUT]().
 - [pythonizr.com](https://pythonizr.com/)
 - [python-boilerplate.com](https://www.python-boilerplate.com)
 
-
-
-## UNDER CONSTRUCTION
-
-
-
-### Can I use `setup.py` instead of `PYTHONPATH`?
-### What files can I access from inside a container?
-
-
-opt-in permissions
-self-documenting
-explicit
-
-### Why can't the container see my files?
-
-- `serve` [mounts] the current working directory.
-  - Containers can read, write, and execute all files in that folder.
-  - Symlinks are not guaranteed to work inside the container.
-
-- `runit` mounts no folders.
-  - Containers cannot access files outside the `pydiner` image.
-
-See the [Docker storage docs] for more information.
-
-
-### Why not use `virtualenv`, `pyenv`, ... ?
-
-The author prefers containers because:
-
-- There is no [hidden state] except Docker itself.
-- The `python` command never calls the wrong Python.
-- System requirements are stated explicitly in the [Dockerfile].
-- Files cannot be modified unless they are explicitly [mounted].
-- Leftovers from [uninstalled packages] do not survive container deletion.
-- Packages not listed in [requirements.txt] or [setup.py] are not installed.
-- Malfunctioning containers are easily [nuked from orbit] and replaced.
-
-PyDiner can be used with a [virtualenv] if you prefer. For example:
-```bash
-cd path/to/wherever/you/put/pydiner
-
-# Delete all the Docker stuff if you want to
-rm .dockerignore Dockerfile kitchen
-
-# Create a virtualenv in the pydiner/.venv folder
-python3 -m venv .venv
-.venv/bin/pip install --upgrade pip
-.venv/bin/pip install --editable .
-.venv/bin/pip install --requirement requirements.txt
-.venv/bin/pip freeze > requirements.txt
-
-# Use the new virtualenv to run the cake script
-.venv/bin/python bin/cake
-```
 
 
 
