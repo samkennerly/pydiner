@@ -6,11 +6,10 @@ Snakes on a plate.
 
 Pydiner is a [template]() for a generic Python project which:
 
-- runs code in [containers]() which [self-destruct]() after exiting
-- never modifies other Pythons, [Anaconda](), or [virtualenvs]()
-- never installs anything outside of its own Docker [images]()
-- declares all required Python packages in `requirements.txt`
-- declares all required system packages in a `Dockerfile`
+- runs all code in [containers]() which [self-destruct]()
+- never installs software outside of its own Docker [images]()
+- never uses or modifies other Pythons, [Anaconda](), or [virtualenvs]()
+- lists [pinned versions]() of installed Python packages in `requirements.txt`
 
 These rules are intended to minimize time spent in [dependency hell]().
 
@@ -19,41 +18,51 @@ These rules are intended to minimize time spent in [dependency hell]().
 To start a new project:
 
 1. Generate a new repo [from this template]().
-2. Delete files you don't need. Add any files you want.
-3. Edit the `Dockerfile` to choose a Python version and system packages.
-4. Edit `requirements.txt` to choose Python packages to install with `pip`.
-5. Run `./kitchen help` to see available commands and Docker objects.
+2. Edit the `Dockerfile` to choose a Python version and system packages.
+3. Edit `requirements.txt` to choose Python packages to install with `pip`.
+4. Open a terminal, `cd` to this folder, and run these commands:
 
-Open a terminal, `cd` to this folder, and run these commands:
+```sh
+# Show all commands and Docker inventory
+./kitchen help
+
+# Build a Docker image named pydiner:monty
+./kitchen bake monty
+
+# Update requirements.txt and rebuild pydiner:monty
+./kitchen freeze monty
+
+# Run Python in a container with $PWD mounted as /context
+./kitchen serve monty python
+
+# Run a script in a container with $PWD mounted as /context
+./kitchen serve monty scrambled eggs
+
+# Run all pydiner tests without mounting any folders
+./kitchen runit monty python -m test
+
+# Show which files were baked into the pydiner:monty image
+./kitchen runit monty tree
+
+# Delete the image, containers, and leftovers
+./kitchen eightysix monty
 ```
-# Build a pydiner:dirty image
-./kitchen bake dirty
-
-# Update requirements.txt and rebuild pydiner:dirty
-./kitchen freeze dirty
-
-# Run all tests in a pydiner:latest container
-./kitchen runit dirty python -m test
-
-# Run a pydiner:dirty container, mount $PWD, and run a script
-./kitchen serve dirty scrambled eggs
-
-# Delete the image, container, and any leftovers
-./kitchen eightysix dirty
-```
-Scroll down for more examples.
+See the [examples](#examples) section for more examples.
 
 ## contents
 
-Pydiner includes small examples of common Python project ingredients:
+Pydiner includes examples of common Python project ingredients:
 
-- [bin/](bin) contains the `scrambled` script.
-- [etc/](etc) contains configuration files for the script.
-- [src/](src) contains the `pydiner` [package]().
-- [test/](test) contains automated [unit tests]() for the package.
+- [bin/](bin) contains executable scripts.
+- [etc/](etc) contains configuration files.
+- [src/](src) contains an importable [package]().
+- [test/](test) is an [executable package]() which runs tests.
+- [var/](var) contains files output by the script(s).
 - The [kitchen]()kitchen script builds and runs [development containers]().
 
 Pydiner's [folder structure]() is loosely based on a C++ template from [hiltmon.com](https://hiltmon.com/blog/2013/07/03/a-simple-c-plus-plus-project-structure/).
+
+### inspect the kitchen
 
 The `kitchen` script contains [shell functions]() including:
 
