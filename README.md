@@ -6,10 +6,10 @@ Snakes on a plate.
 
 Pydiner is a [template]() for a generic Python project which:
 
-- runs all code in [containers]() which [self-destruct]()
+- runs code in [containers]() which [self-destruct]()
 - never installs software outside of its own Docker [images]()
 - never uses or modifies other Pythons, [Anaconda](), or [virtualenvs]()
-- updates `requirements.txt` with [pinned versions]() of installed Python packages
+- updates `requirements.txt` with [pinned versions]() of installed packages
 
 These rules are intended to minimize time spent in [dependency hell]().
 
@@ -20,12 +20,15 @@ To start a new project:
 1. Generate a new repo [from this template]().
 2. Edit the `Dockerfile` to choose a Python version and system packages.
 3. Edit `requirements.txt` to choose Python packages to install with `pip`.
-4. Open a terminal, `cd` to this folder, and run these commands:
-
+4. Open a terminal, `cd` to this folder, and run this command:
 ```sh
-# Show all commands and Docker inventory
 ./kitchen help
+```
 
+### mise en python
+
+Pydiner's [kitchen](kitchen) defines [shell functions]() for running [development containers]().
+```sh
 # Build a Docker image named pydiner:monty
 ./kitchen bake monty
 
@@ -35,23 +38,53 @@ To start a new project:
 # Run Python in a container with $PWD mounted as /context
 ./kitchen serve monty python
 
-# Run a script in a container with $PWD mounted as /context
-./kitchen serve monty scrambled eggs
-
-# Run all pydiner tests without mounting any folders
+# Run automated tests without mounting any folders
 ./kitchen runit monty python -m test
 
-# Show which files were baked into the pydiner:monty image
-./kitchen runit monty tree
+# Show which files were baked into the `pydiner:latest` image.
+./kitchen runit latest tree
 
 # Delete the image, its containers, and any leftovers
 ./kitchen eightysix monty
 ```
 Typing `./kitchen` before each command is not necessary if the kitchen is [sourced]().
 
+### baking images
+
+Baking a `pydiner` image copies files from the the [build context]() into the image.
+
+- Inside a container, these <q>baked-in</q> copies will appear in the `/context` folder.
+- Each `pydiner` container gets its own independent copy of the `/context` folder.
+- Edit `.dockerignore` to declare file patterns which should never be copied.
+- Edit `Dockerfile` to choose which non-ignored files are copied into images.
+
+Modifying a baked-in copy does **not** affect the original file.
+
+### freezing packages
+
+Freezing an image runs `pip freeze` and saves the output to `requirements.txt`.
+
+- When a `pydiner` image is first baked, it uses `pip` to install requirements.
+- Subsequent bakes often skip using `pip` if `requirements.txt` is unchanged.
+- If versions are not [pinned](), then baking might not produce [reproducible builds]().
+- Running `freeze` enables `pip` to install the same package versions every time.
+
+Freezing **overwrites** anything that was in `requirements.txt`.
+
+### serving with fresh files
+
+Serving an image runs a new container with the current folder [mounted]() as `/context`.
+
+- Images are [immutable](). Rebuilding is the only way to update baked-in files.
+- For development work, rebuilding after every minor code edit can be impractical.
+- Mounting folders gives a container read and write access to the original files.
+- Any files baked into `/context` will be [shadowed]() by these <q>fresh</q> files.
+
+Mounts are **not** copies. If a mounted file dies in a container, it dies in the real world.
+
 ## contents
 
-Pydiner includes examples of common Python project ingredients:
+Pydiner includes short examples of common project ingredients:
 
 - [bin/](bin) contains executable scripts.
 - [etc/](etc) contains configuration files.
@@ -61,32 +94,6 @@ Pydiner includes examples of common Python project ingredients:
 
 The [folder structure]() is loosely based on a C++ template from [hiltmon.com](https://hiltmon.com/blog/2013/07/03/a-simple-c-plus-plus-project-structure/).
 
-### the kitchen script
-
-Pydiner's [kitchen](kitchen) defines [shell functions]() for running containers.
-Run `kitchen help` for details.
-
-`./kitchen bake` copies files from the the [build context]() into an image's `/context` folder.
-
-- Edit the `Dockerfile` to choose which files are copied into images.
-- Files matching patterns in `.dockerignore` are never copied into images.
-- Each `pydiner` container gets an independent copy of the `/context` folder.
-- Files baked into an image do **not** update themselves when the originals change.
-
-`./kitchen freeze` runs `pip freeze` and saves the output to `requirements.txt`.
-
-- When a new `pydiner` image is baked, it uses `pip` to install requirements.
-- On subsequent bakes, `pip` might not run again if `requirements.txt` is unchanged
-- Running `freeze` forces `pip` to install the same package versions every time.
-- Freezing **overwrites** anything that was in `requirements.txt`.
-
-`./kitchen serve` runs a container with the current folder [mounted]() as `/context`.
-
-- Images are [immutable](). Rebuilding is the only way to update baked-in files.
-- Running `serve` runs a new container with real-time access to the original files.
-- Any files baked into `/context` will be [shadowed]() by these <q>fresh</q> files.
-- Mounts are **not** copies. If a mounted file dies in a container, it dies in the real world.
-
 ## dependencies
 
 Pydiner does not require Python. It has one dependency:
@@ -95,34 +102,26 @@ Pydiner does not require Python. It has one dependency:
 
 Windows users may need to edit the [kitchen]() script for [path compatibility]().
 
-## examples (UNDER CONSTRUCTION)
+## examples
 
-If everything worked, your terminal should look like this:
-```bash
-Successfully tagged pydiner:latest
-Total reclaimed space: 0B
-root@pydiner:/context#
+Remember to `cd` to this folder before running any `kitchen` commmands.
+
+Bake, freeze, and serve `bash` with the default name `pydiner:latest`.
+```sh
+./kitchen bake && ./kitchen freeze && ./kitchen serve
 ```
 
-Each `pydiner` container acts like a real Linux machine:
-```bash
+Serving `bash` makes the container act like a real Linux machine.
+```sh
 root@pydiner:/context# which python
 /usr/local/bin/python
 root@pydiner:/context# grep PRETTY_NAME /etc/os-release
 PRETTY_NAME="Debian GNU/Linux 10 (buster)"
+root@pydiner:/context#
 ```
-Project files are in the `/context` folder:
-```bash
-root@pydiner:/context# ls
-Dockerfile  LICENSE  README.md  TODO.txt  bin  etc  kitchen  requirements.txt  setup.py  src  test  var
-```
-Packages in [requirements.txt] and [setup.py] have been installed:
-```bash
-root@pydiner:/context# flake8
-./test/test_utensils.py:15:26: E203 whitespace before ':'
-```
-The `pydiner` package can be imported without hacking [sys.path]:
-```bash
+
+Run Python and `import pydiner` without hacking [sys.path]().
+```sh
 root@pydiner:/context# python
 Python 3.7.4 (default, Jul 13 2019, 14:04:11)
 [GCC 8.3.0] on linux
@@ -130,12 +129,40 @@ Type "help", "copyright", "credits" or "license" for more information.
 >>> import pydiner
 >>> pydiner.echo("Hello, World!")
 2019-08-24 22:35:05 Hello, World!
+>>> exit()
+root@pydiner:/context#
 ```
-Scripts in the project's [bin/] folder are on the system [PATH]:
-```bash
-root@pydiner:/context# soda --fizz 2 --buzz 3 1 10
-1 Fizz  Buzz  Fizz  5 FizzBuzz  7 Fizz  Buzz
+
+Scripts in the project's `bin` folder are on the system [PATH]().
+```sh
+root@pydiner:/context# scrambled eggs
+2019-12-03 21:36:55 Write derangements of 'eggs' to STDOUT
+2019-12-03 21:36:55 10 expected
+gesg
+gseg
+gesg
+gseg
+2019-12-03 21:36:55 4 found
+2019-12-03 21:36:55 0:00:00.000116 time elapsed
+root@pydiner:/context#
 ```
+
+Save the output of a script.
+```sh
+root@pydiner:/context# scrambled -o var/dirtyfork.txt dirtyfork
+2019-12-03 21:42:07 Write derangements of 'dirtyfork' to /context/var/dirtyfork.txt
+2019-12-03 21:42:07 145152 expected
+2019-12-03 21:42:07 101976 found
+2019-12-03 21:42:07 0:00:00.632822 time elapsed
+root@pydiner:/context#
+```
+
+Exit the container.
+```sh
+root@pydiner:/context# exit
+```
+
+Look inside the `var` folder. Is the output file real, or was it all just a dream?
 
 ## faq
 
