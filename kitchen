@@ -36,7 +36,7 @@ alamode() {
 bake() {
   touch "$PKGFILE" &&
   docker build \
-    --tag "$TAGBASE:${1-latest}" \
+    --tag "$TAGBASE:${1:-latest}" \
     --build-arg WORKDIR="$WORKDIR" \
     "$CONTEXT" &&
   docker image prune --force
@@ -49,20 +49,20 @@ debug() {
   serve "$1" python -m pdb "${@:2}"
 }
 eightysix() {
-  clean && docker rmi --force "$TAGBASE:${1-latest}" && docker image prune --force
+  clean && docker rmi --force "$TAGBASE:${1:-latest}" && docker image prune --force
 }
 freeze() {
-  docker run --rm "$TAGBASE:${1-latest}" pip freeze --exclude-editable > "$PKGFILE" &&
+  docker run --rm "$TAGBASE:${1:-latest}" pip freeze --exclude-editable > "$PKGFILE" &&
   bake "$1"
 }
 runit() {
-  docker run --rm --interactive --tty "$TAGBASE:${1-latest}" "${@:2}"
+  docker run --rm --interactive --tty "$TAGBASE:${1:-latest}" "${@:2}"
 }
 serve() {
   docker run --rm --interactive --tty \
     --volume "${CONTEXT}:${WORKDIR}:delegated" \
     --hostname "${TAGBASE}" \
-    "$TAGBASE:${1-latest}" "${@:2}"
+    "$TAGBASE:${1:-latest}" "${@:2}"
 }
 
 if [ $# -eq 0 ]; then help; else "$@"; fi
