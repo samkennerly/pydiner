@@ -57,7 +57,7 @@ def test_iterlines():
 
 def test_loggers():
     inputs = ["How about a nice game of", __file__, "?"]
-    outstr = " ".join( str(x) for x in inputs ) + "\n"
+    outstr = " ".join(str(x) for x in inputs) + "\n"
 
     for meth in (pydiner.achtung, pydiner.echo):
         with StringIO() as stream:
