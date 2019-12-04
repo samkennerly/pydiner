@@ -26,9 +26,9 @@ kw = {
     "package_data": {"": ["*.md"]},
     "package_dir": {"": "src"},
     "packages": find_packages(where="src"),
-    "python_requires": ">=3.7.4, <4",
+    "python_requires": ">=3.7.5, <4",
     "url": "https://github.com/samkennerly/pydiner/",
-    "version": "0.1.0",
+    "version": "0.2.0",
 }
 
 if __name__ == "__main__":

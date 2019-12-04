@@ -1,4 +1,4 @@
-FROM python:3.7.4
+FROM python:3.7.5
 LABEL description="Python development sandbox"
 LABEL maintainer="samkennerly@gmail.com"
 

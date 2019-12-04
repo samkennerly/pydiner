@@ -160,7 +160,7 @@ root@pydiner:/context#
 Run Python and `import pydiner` without hacking [sys.path].
 ```sh
 root@pydiner:/context# python
-Python 3.7.4 (default, Oct 17 2019, 05:59:21)
+Python 3.7.5 (default, Nov 23 2019, 05:59:34)
 [GCC 8.3.0] on linux
 Type "help", "copyright", "credits" or "license" for more information.
 >>> import pydiner
