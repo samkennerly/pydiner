@@ -1,8 +1,10 @@
 # pydiner
 
-Snakes on a plate.
+Bake and serve Python [development containers].
 
-<img alt="snake" src="pydiner.png">
+![The Dirty Fork](pydiner.jpeg)
+
+[development containers]:https://docs.docker.com/develop/
 
 ## abstract
 
@@ -29,9 +31,10 @@ These rules are intended to minimize time spent in [dependency hell].
 To start a new project:
 
 1. Generate a new repo [from this template].
-2. Edit the `Dockerfile` to choose a Python version and system packages.
-3. Edit `requirements.txt` to choose Python packages to install with [pip].
-4. Open a terminal, `cd` to this folder, and run this command:
+1. Delete any files and folders you don't want.
+1. Edit the `Dockerfile` to choose a Python version.
+1. Edit `requirements.txt` to choose Python packages.
+1. Open a terminal, `cd` to this folder, and run this command:
 ```sh
 ./kitchen help
 ```
@@ -41,7 +44,7 @@ To start a new project:
 
 ### mise en python
 
-The `kitchen` script defines [shell functions] for running [development containers].
+The `kitchen` script defines [shell functions] for common Docker commands.
 ```sh
 # Build a Docker image named pydiner:monty
 ./kitchen bake monty
@@ -64,7 +67,6 @@ The `kitchen` script defines [shell functions] for running [development containe
 Typing `./kitchen` before each command is optional if the `kitchen` is [sourced].
 
 [shell functions]:https://www.gnu.org/software/bash/manual/html_node/Shell-Functions.html
-[development containers]:https://docs.docker.com/develop/
 [sourced]:https://en.wikipedia.org/wiki/Source_(command)
 
 ### baking images
