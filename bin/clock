@@ -8,8 +8,8 @@ from time import sleep
 from pydiner import achtung, echo
 
 HELLO = "Groetjes, mijnheer van Rossum."
-ERROR = "The only winning move is not to play."
+ERROR = "De enige winnende zet is niet om te spelen."
 
 while True:
-    echo(HELLO) if randrange(0, 10) else achtung(ERROR)
+    echo(HELLO) if randrange(0, 8) else achtung(ERROR)
     sleep(1)
