@@ -16,9 +16,9 @@ kw = {
         "License :: OSI Approved :: Apache Software License",
         "Programming Language :: Python :: 3",
     ],
-    "description": "Python project template",
-    "install_requires": ["black", "flake8"],
-    "keywords": "docker environment kitchen sandbox template",
+    "description": "Template for a containerized Python project.",
+    "install_requires": ["pytest"],
+    "keywords": "development docker environment kitchen sandbox template testing",
     "license": read("LICENSE"),
     "long_description": read("README.md"),
     "long_description_content_type": "text/markdown",
@@ -27,8 +27,8 @@ kw = {
     "package_dir": {"": "src"},
     "packages": find_packages(where="src"),
     "python_requires": ">=3.7.4, <4",
-    "url": "https://github.com/samkennerly/pydiner",
-    "version": "0.0.1",
+    "url": "https://github.com/samkennerly/pydiner/",
+    "version": "0.1.0",
 }
 
 if __name__ == "__main__":
