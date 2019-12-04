@@ -252,5 +252,4 @@ None. Programs [stop immediately] when something goes wrong.
 - [Cookiecutter](https://github.com/cookiecutter/cookiecutter)
 - [PyPA tutorial](https://packaging.python.org/tutorials/packaging-projects/)
 - [PyPA sample project](https://github.com/pypa/sampleproject)
-- [pythonizr.com](https://pythonizr.com/)
 - [python-boilerplate.com](https://www.python-boilerplate.com)
