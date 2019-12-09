@@ -1,22 +1,22 @@
 #!/usr/bin/env sh
 
 CONTEXT=$PWD                    # Build from CONTEXT folder
-TAGBASE=$(basename "$CONTEXT")  # Name image TAGBASE:sometag
-PKGFILE="requirements.txt"      # Install packages from PKGFILE
+PROJECT=$(basename "$CONTEXT")  # Name image TAGBASE:sometag
+REQFILE="requirements.txt"      # Install packages from REQFILE
 WORKDIR="/context"              # Copy/mount files to WORKDIR in container
 
 help() {
   echo "Run disposable containers built from $CONTEXT"
   echo
   echo "COMMANDS"
-  echo "alamode [TAG] [CMD]     Bake $TAGBASE:TAG, freeze it, and serve CMD"
-  echo "bake [TAG]              Build $TAGBASE:TAG image from $CONTEXT"
-  echo "clean                   Delete all $TAGBASE containers and Docker leftovers"
-  echo "debug TAG SCRIPT [ARGS] Debug SCRIPT in a $TAGBASE:TAG container"
-  echo "eightysix [TAG]         Delete $TAGBASE:TAG image, containers, and leftovers"
-  echo "freeze [TAG]            Update $PKGFILE and rebuild $TAGBASE:TAG image"
+  echo "alamode [TAG] [CMD]     Bake $PROJECT:TAG, freeze it, and serve CMD"
+  echo "bake [TAG]              Build $PROJECT:TAG image from $CONTEXT"
+  echo "clean                   Delete all $PROJECT containers and Docker leftovers"
+  echo "debug TAG SCRIPT [ARGS] Debug SCRIPT in a $PROJECT:TAG container"
+  echo "eightysix [TAG]         Delete $PROJECT:TAG image, containers, and leftovers"
+  echo "freeze [TAG]            Update $REQFILE and rebuild $PROJECT:TAG image"
   echo "help                    Show commands, examples, and Docker inventory"
-  echo "runit [TAG] [CMD]       Run CMD in an interactive $TAGBASE:TAG container"
+  echo "runit [TAG] [CMD]       Run CMD in an interactive $PROJECT:TAG container"
   echo "serve [TAG] [CMD]       runit [TAG] [CMD] with $CONTEXT mounted as $WORKDIR"
   echo
   echo "EXAMPLES"
@@ -34,35 +34,35 @@ alamode() {
   bake "$1" && freeze "$1" && serve "$@"
 }
 bake() {
-  touch "$PKGFILE" &&
+  touch "$REQFILE" &&
   docker build \
-    --tag "$TAGBASE:${1:-latest}" \
+    --tag "$PROJECT:${1:-latest}" \
     --build-arg WORKDIR="$WORKDIR" \
     "$CONTEXT" &&
   docker image prune --force
 }
 clean() {
-  docker ps --quiet --filter ancestor="$TAGBASE" | xargs docker rm --force &&
+  docker ps --quiet --filter ancestor="$PROJECT" | xargs docker rm --force &&
   docker system prune --force
 }
 debug() {
   serve "$1" python -m pdb "${@:2}"
 }
 eightysix() {
-  clean && docker rmi --force "$TAGBASE:${1:-latest}" && docker image prune --force
+  clean && docker rmi --force "$PROJECT:${1:-latest}" && docker image prune --force
 }
 freeze() {
-  docker run --rm "$TAGBASE:${1:-latest}" pip freeze --exclude-editable > "$PKGFILE" &&
+  docker run --rm "$PROJECT:${1:-latest}" pip freeze --exclude-editable > "$REQFILE" &&
   bake "$1"
 }
 runit() {
-  docker run --rm --interactive --tty "$TAGBASE:${1:-latest}" "${@:2}"
+  docker run --rm --interactive --tty "$PROJECT:${1:-latest}" "${@:2}"
 }
 serve() {
   docker run --rm --interactive --tty \
     --volume "${CONTEXT}:${WORKDIR}:delegated" \
-    --hostname "${TAGBASE}" \
-    "$TAGBASE:${1:-latest}" "${@:2}"
+    --hostname "${PROJECT}" \
+    "$PROJECT:${1:-latest}" "${@:2}"
 }
 
 if [ $# -eq 0 ]; then help; else "$@"; fi
