@@ -4,7 +4,7 @@ Bake and serve Python [development containers].
 
 ![The Dirty Fork](pydiner.jpeg)
 
-[development containers]:https://docs.docker.com/develop/
+[development containers]: https://docs.docker.com/develop/
 
 ## abstract
 
@@ -17,14 +17,14 @@ Bake and serve Python [development containers].
 
 These rules are intended to minimize time spent in [dependency hell].
 
-[template]:https://help.github.com/en/articles/creating-a-repository-from-a-template
-[containers]:https://en.wikipedia.org/wiki/OS-level_virtualisation
-[self-destruct]:https://docs.docker.com/engine/reference/run/#clean-up---rm
-[Docker images]:https://docs.docker.com/engine/docker-overview/
-[Anaconda]:https://www.anaconda.com/
-[virtualenvs]:https://virtualenv.pypa.io/en/latest/
-[pinned versions]:https://pip.pypa.io/en/stable/user_guide/#pinned-version-numbers
-[dependency hell]:https://en.wikipedia.org/wiki/Dependency_hell
+[template]: https://help.github.com/en/articles/creating-a-repository-from-a-template
+[containers]: https://en.wikipedia.org/wiki/OS-level_virtualisation
+[self-destruct]: https://docs.docker.com/engine/reference/run/#clean-up---rm
+[Docker images]: https://docs.docker.com/engine/docker-overview/
+[Anaconda]: https://www.anaconda.com/
+[virtualenvs]: https://virtualenv.pypa.io/en/latest/
+[pinned versions]: https://pip.pypa.io/en/stable/user_guide/#pinned-version-numbers
+[dependency hell]: https://en.wikipedia.org/wiki/Dependency_hell
 
 ## basics
 
@@ -34,13 +34,14 @@ To start a new project:
 1. Delete any files and folders you don't want.
 1. Edit the `Dockerfile` to choose a Python version.
 1. Edit `requirements.txt` to choose Python packages.
-1. Open a terminal, `cd` to this folder, and run this command:
+1. Open a [terminal], `cd` to this folder, and run this command:
 ```sh
 ./kitchen help
 ```
 
-[from this template]:https://help.github.com/en/articles/creating-a-repository-from-a-template
-[pip]:https://pip.pypa.io/en/stable/
+[from this template]: https://help.github.com/en/articles/creating-a-repository-from-a-template
+[pip]: https://pip.pypa.io/en/stable/
+[terminal]: https://en.wikipedia.org/wiki/Command-line_interface
 
 ### mise en python
 
@@ -66,8 +67,8 @@ The `kitchen` script defines [shell functions] for common Docker commands.
 ```
 Typing `./kitchen` before each command is optional if the `kitchen` is [sourced].
 
-[shell functions]:https://www.gnu.org/software/bash/manual/html_node/Shell-Functions.html
-[sourced]:https://en.wikipedia.org/wiki/Source_(command)
+[shell functions]: https://www.gnu.org/software/bash/manual/html_node/Shell-Functions.html
+[sourced]: https://en.wikipedia.org/wiki/Source_(command)
 
 ### baking images
 
@@ -80,7 +81,7 @@ Baking a `pydiner` image copies files from the the [build context] into the imag
 
 Modifying a baked-in copy does **not** affect the original file.
 
-[build context]:https://docs.docker.com/engine/reference/commandline/build/
+[build context]: https://docs.docker.com/engine/reference/commandline/build/
 
 ### freezing packages
 
@@ -93,8 +94,8 @@ Freezing an image runs `pip freeze` and saves the output to `requirements.txt`.
 
 Freezing **overwrites** anything that was in `requirements.txt`.
 
-[pinned]:https://pip.pypa.io/en/stable/user_guide/#pinned-version-numbers
-[reproducible builds]:https://en.wikipedia.org/wiki/Reproducible_builds
+[pinned]: https://pip.pypa.io/en/stable/user_guide/#pinned-version-numbers
+[reproducible builds]: https://en.wikipedia.org/wiki/Reproducible_builds
 
 ### serving with fresh files
 
@@ -107,7 +108,7 @@ Serving an image runs a new container with the current folder [mounted] as `/con
 
 Mounts are **not** copies. If a mounted file dies in a container, it dies in the real world.
 
-[mounted]:https://docs.docker.com/storage/bind-mounts/
+[mounted]: https://docs.docker.com/storage/bind-mounts/
 
 ## contents
 
@@ -121,10 +122,10 @@ Mounts are **not** copies. If a mounted file dies in a container, it dies in the
 
 The [folder structure] is loosely based on a C++ template from [hiltmon.com].
 
-[package]:https://docs.python.org/3/tutorial/modules.html#packages
-[executable package]:https://docs.python.org/3/library/__main__.html
-[folder structure]:https://en.wikipedia.org/wiki/Directory_structure
-[hiltmon.com]:https://hiltmon.com/blog/2013/07/03/a-simple-c-plus-plus-project-structure/
+[package]: https://docs.python.org/3/tutorial/modules.html#packages
+[executable package]: https://docs.python.org/3/library/__main__.html
+[folder structure]: https://en.wikipedia.org/wiki/Directory_structure
+[hiltmon.com]: https://hiltmon.com/blog/2013/07/03/a-simple-c-plus-plus-project-structure/
 
 ## dependencies
 
@@ -201,8 +202,8 @@ root@pydiner:/context# exit
 
 Look inside the `var` folder. Is the output file real, or was it all just a dream?
 
-[sys.path]:https://docs.python.org/3/library/sys.html#sys.path
-[PATH]:https://en.wikipedia.org/wiki/PATH_(variable)
+[sys.path]: https://docs.python.org/3/library/sys.html#sys.path
+[PATH]: https://en.wikipedia.org/wiki/PATH_(variable)
 
 
 ## faq
@@ -215,37 +216,37 @@ Hit *CTRL-D* to exit a container.
 
 Don't. Use it as a [template] for a new repository.
 
-[template]:https://help.github.com/en/articles/creating-a-repository-from-a-template
+[template]: https://help.github.com/en/articles/creating-a-repository-from-a-template
 
 ### Do I have to run containers as root?
 
 Not if you create a `USER`. See the [Dockerfile reference] for details.
 
-[Dockerfile reference]:https://docs.docker.com/engine/reference/builder/
+[Dockerfile reference]: https://docs.docker.com/engine/reference/builder/
 
 ### Can I run containers in the background?
 
 Yes, but not with the `kitchen` script. See the [Docker run reference].
 
-[Docker run reference]:https://docs.docker.com/engine/reference/run/
+[Docker run reference]: https://docs.docker.com/engine/reference/run/
 
 ### What testing framework does `pydiner` use?
 
 None, but it has been tested with [pytest] to ensure compatibility.
 
-[pytest]:https://docs.pytest.org/en/latest/
+[pytest]: https://docs.pytest.org/en/latest/
 
 ### What logging framework does `pydiner` use?
 
 [None]. `achtung()` prints to `STDERR`. `echo()` prints to `STDOUT`.
 
-[None]:https://12factor.net/logs
+[None]: https://12factor.net/logs
 
 ### What exception handler does `pydiner` use?
 
 None. Programs [stop immediately] when something goes wrong.
 
-[stop immediately]:https://global.toyota/en/company/vision-and-philosophy/production-system/
+[stop immediately]: https://global.toyota/en/company/vision-and-philosophy/production-system/
 
 ### What are some other Python project templates?
 
