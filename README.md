@@ -15,7 +15,7 @@ Bake and serve Python [development containers].
 - never uses or modifies other Pythons, [Anaconda], or [virtualenvs].
 - updates `requirements.txt` with [pinned versions] of installed packages.
 
-These rules are intended to minimize time spent in [dependency hell].
+These rules are intended to avoid [dependency hell].
 
 [template]: https://help.github.com/en/articles/creating-a-repository-from-a-template
 [containers]: https://en.wikipedia.org/wiki/OS-level_virtualisation
