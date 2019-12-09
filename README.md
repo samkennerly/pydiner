@@ -11,6 +11,7 @@ Bake and serve Python [development containers].
 `pydiner` is a [template] for a generic Python project which:
 
 - runs code in [containers] which [self-destruct].
+- never reads or modifies files outside of its repository.
 - never installs software outside of its own [Docker images].
 - never uses or modifies other Pythons, [Anaconda], or [virtualenvs].
 - updates `requirements.txt` with [pinned versions] of installed packages.
@@ -38,6 +39,7 @@ To start a new project:
 ```sh
 ./kitchen help
 ```
+This will show all `kitchen` commands and Docker objects.
 
 [from this template]: https://help.github.com/en/articles/creating-a-repository-from-a-template
 [pip]: https://pip.pypa.io/en/stable/
@@ -59,8 +61,8 @@ The `kitchen` script defines [shell functions] for common Docker commands.
 # Run automated tests without mounting any folders
 ./kitchen runit monty python -m test
 
-# Show which files were baked into the `pydiner:latest` image.
-./kitchen runit latest tree
+# Show which files were baked into the `pydiner:monty` image
+./kitchen runit monty tree
 
 # Delete the image, its containers, and any leftovers
 ./kitchen eightysix monty
@@ -72,7 +74,7 @@ Typing `./kitchen` before each command is optional if the `kitchen` is [sourced]
 
 ### baking images
 
-Baking a `pydiner` image copies files from the the [build context] into the image.
+Baking [builds] an image with copies of files from the [build context].
 
 - Inside a container, the <q>baked-in</q> copies will appear in the `/context` folder.
 - Every new `pydiner` container gets its own independent `/context` folder.
@@ -81,6 +83,7 @@ Baking a `pydiner` image copies files from the the [build context] into the imag
 
 Modifying a baked-in copy does **not** affect the original file.
 
+[builds]: https://docs.docker.com/engine/reference/commandline/build/
 [build context]: https://docs.docker.com/engine/reference/commandline/build/
 
 ### freezing packages
@@ -146,7 +149,7 @@ Remember to `cd` to this folder before running any `kitchen` commmands.
 
 Bake, freeze, and serve `bash` with the default name `pydiner:latest`.
 ```sh
-./kitchen bake && ./kitchen freeze && ./kitchen serve
+./kitchen alamode
 ```
 
 Serving `bash` makes the container act like a real Linux machine.
@@ -155,7 +158,6 @@ root@pydiner:/context# which python
 /usr/local/bin/python
 root@pydiner:/context# grep PRETTY_NAME /etc/os-release
 PRETTY_NAME="Debian GNU/Linux 10 (buster)"
-root@pydiner:/context#
 ```
 
 Run Python and `import pydiner` without hacking [sys.path].
@@ -168,7 +170,6 @@ Type "help", "copyright", "credits" or "license" for more information.
 >>> pydiner.echo("Hello, World!")
 2019-12-03 21:35:05 Hello, World!
 >>> exit()
-root@pydiner:/context#
 ```
 
 Scripts in `/context/bin` are on the system [PATH].
@@ -182,7 +183,6 @@ gesg
 gseg
 2019-12-03 21:36:55 4 found
 2019-12-03 21:36:55 0:00:00.000116 time elapsed
-root@pydiner:/context#
 ```
 
 Save the output of a script to a file.
@@ -192,7 +192,6 @@ root@pydiner:/context# scrambled -o var/dirtyfork.txt dirtyfork
 2019-12-03 21:42:07 145152 expected
 2019-12-03 21:42:07 101976 found
 2019-12-03 21:42:07 0:00:00.632822 time elapsed
-root@pydiner:/context#
 ```
 
 Exit the container.
