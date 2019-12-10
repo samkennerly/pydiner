@@ -1,30 +1,31 @@
 # pydiner
 
-Bake and serve Python [development containers].
+Keep your [development environments] clean.
 
 ![The Dirty Fork](pydiner.jpeg)
 
-[development containers]: https://docs.docker.com/develop/
+[development environments]: https://en.wikipedia.org/wiki/Sandbox_(software_development)
 
 ## abstract
 
 `pydiner` is a [template] for a generic Python project which:
 
-- runs code in [containers] which [self-destruct].
+- runs code in [Docker containers] which [self-destruct].
 - never reads or modifies files outside of its repository.
 - never installs software outside of its own [Docker images].
 - never uses or modifies other Pythons, [Anaconda], or [virtualenvs].
-- updates `requirements.txt` with [pinned versions] of installed packages.
+- updates `requirements.txt` with [pinned versions] of all [pip] installs.
 
 These rules are intended to avoid [dependency hell].
 
 [template]: https://help.github.com/en/articles/creating-a-repository-from-a-template
-[containers]: https://en.wikipedia.org/wiki/OS-level_virtualisation
+[Docker containers]: https://docs.docker.com/develop/
 [self-destruct]: https://docs.docker.com/engine/reference/run/#clean-up---rm
 [Docker images]: https://docs.docker.com/engine/docker-overview/
 [Anaconda]: https://www.anaconda.com/
 [virtualenvs]: https://virtualenv.pypa.io/en/latest/
 [pinned versions]: https://pip.pypa.io/en/stable/user_guide/#pinned-version-numbers
+[pip]: https://pip.pypa.io/en/stable/
 [dependency hell]: https://en.wikipedia.org/wiki/Dependency_hell
 
 ## basics
@@ -37,31 +38,30 @@ To start a new project:
 1. Edit `requirements.txt` to choose Python packages.
 1. Open a [terminal], `cd` to this folder, and run this command:
 ```sh
-./kitchen help
+./kitchen
 ```
-This will show all `kitchen` commands and Docker objects.
+This will show the `kitchen` help message.
 
 [from this template]: https://help.github.com/en/articles/creating-a-repository-from-a-template
-[pip]: https://pip.pypa.io/en/stable/
 [terminal]: https://en.wikipedia.org/wiki/Command-line_interface
 
 ### mise en python
 
-The `kitchen` script defines [shell functions] for common Docker commands.
+The `kitchen` script defines [shell functions] for Docker commands.
 ```sh
-# Build a Docker image named pydiner:monty
+# Bake a Docker image named pydiner:monty
 ./kitchen bake monty
 
-# Update requirements.txt and rebuild pydiner:monty
+# Freeze requirements.txt and rebuild pydiner:monty
 ./kitchen freeze monty
 
-# Run Python in a container with $PWD mounted as /context
+# Serve Python in a pydiner:monty container with $PWD mounted as /context
 ./kitchen serve monty python
 
-# Run automated tests without mounting any folders
+# Run tests in a pydiner:monty container without mounting any folders
 ./kitchen runit monty python -m test
 
-# Show which files were baked into the `pydiner:monty` image
+# Show which files were baked into the image
 ./kitchen runit monty tree
 
 # Delete the image, its containers, and any leftovers
@@ -81,7 +81,7 @@ Baking [builds] an image with copies of files from the [build context].
 - Edit `.dockerignore` to declare file patterns which should never be copied.
 - Edit `Dockerfile` to choose which non-ignored files are copied into images.
 
-Modifying a baked-in copy does **not** affect the original file.
+Modifying baked-in files does **not** affect the original files.
 
 [builds]: https://docs.docker.com/engine/reference/commandline/build/
 [build context]: https://docs.docker.com/engine/reference/commandline/build/
@@ -90,14 +90,14 @@ Modifying a baked-in copy does **not** affect the original file.
 
 Freezing an image runs `pip freeze` and saves the output to `requirements.txt`.
 
-- When a `pydiner` image is first baked, it uses `pip` to install packages.
-- Subsequent bakes often skip using `pip` if `requirements.txt` is unchanged.
-- If versions are not [pinned], then baking might not produce [reproducible builds].
+- [Pinned] versions are necessary to produce [reproducible builds].
+- When an image is baked for the first time, `pip` installs packages.
+- Baking an image again might not install exactly the same package versions.
 - Running `freeze` enables `pip` to install the same package versions every time.
 
 Freezing **overwrites** anything that was in `requirements.txt`.
 
-[pinned]: https://pip.pypa.io/en/stable/user_guide/#pinned-version-numbers
+[Pinned]: https://pip.pypa.io/en/stable/user_guide/#pinned-version-numbers
 [reproducible builds]: https://en.wikipedia.org/wiki/Reproducible_builds
 
 ### serving with fresh files
@@ -105,9 +105,9 @@ Freezing **overwrites** anything that was in `requirements.txt`.
 Serving an image runs a new container with the current folder [mounted] as `/context`.
 
 - Images are immutable. Rebuilding is the only way to update baked-in files.
-- For development work, rebuilding after each code edit can be impractical.
-- Mounting folders gives a container read and write access to the files inside.
-- Any files baked into `/context` will be obscured by these <q>fresh</q> files.
+- For development work, rebuilding after every code edit can be impractical.
+- Mounting a folder gives a container read and write access to the files inside.
+- Any files baked into `/context` will be obscured by the <q>fresh</q> mounted files.
 
 Mounts are **not** copies. If a mounted file dies in a container, it dies in the real world.
 
@@ -147,12 +147,27 @@ Windows users may need to edit the `kitchen` script for [path compatibility].
 
 Remember to `cd` to this folder before running any `kitchen` commmands.
 
-Bake, freeze, and serve `bash` with the default name `pydiner:latest`.
+Bake a `pydiner:latest` image, freeze it, and serve `bash`.
 ```sh
-./kitchen alamode
+./kitchen bake && ./kitchen freeze && ./kitchen serve
+Sending build context to Docker daemon  237.6kB
+Step 1/10 : FROM python:3.7.5
+ ---> fbf9f709ca9f
+Step 2/10 : LABEL description="Python development sandbox"
+ ---> Using cache
+ ---> 4fec2ba14a9c
+Step 3/10 : LABEL maintainer="samkennerly@gmail.com"
+ ---> Using cache
+ ---> c65a9651b61f
+
+...
+
+Successfully tagged pydiner:latest
+Total reclaimed space: 0B
+root@pydiner:/context#
 ```
 
-Serving `bash` makes the container act like a real Linux machine.
+From the inside, a container looks like a real Linux machine.
 ```sh
 root@pydiner:/context# which python
 /usr/local/bin/python
@@ -185,21 +200,17 @@ gseg
 2019-12-03 21:36:55 0:00:00.000116 time elapsed
 ```
 
-Save the output of a script to a file.
+Save the output of a script and exit the container.
 ```sh
 root@pydiner:/context# scrambled -o var/dirtyfork.txt dirtyfork
 2019-12-03 21:42:07 Write derangements of 'dirtyfork' to /context/var/dirtyfork.txt
 2019-12-03 21:42:07 145152 expected
 2019-12-03 21:42:07 101976 found
 2019-12-03 21:42:07 0:00:00.632822 time elapsed
-```
-
-Exit the container.
-```sh
 root@pydiner:/context# exit
 ```
 
-Look inside the `var` folder. Is the output file real, or was it all just a dream?
+The file `var/dirtyfork.txt` should still exist outside the container.
 
 [sys.path]: https://docs.python.org/3/library/sys.html#sys.path
 [PATH]: https://en.wikipedia.org/wiki/PATH_(variable)
