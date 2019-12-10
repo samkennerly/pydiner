@@ -6,17 +6,12 @@ LABEL maintainer="samkennerly@gmail.com"
 RUN apt-get -y update && apt-get -y install less tree vim
 
 # Install Python packages
-COPY ["requirements.txt", "/tmp/requirements.txt"]
+COPY requirements.txt /tmp
 RUN pip install --upgrade pip && pip install --requirement /tmp/requirements.txt
 
-# Create project folder
-ARG WORKDIR=/context
-WORKDIR "${WORKDIR}"
-
-# Find bin/ scripts and src/ code
-ENV PATH="${WORKDIR}/bin:${PATH}" PYTHONPATH="${WORKDIR}/src"
-
 # Copy repo files (unless .dockerignore)
-COPY [".", "${WORKDIR}"]
+ENV PATH="/context/bin:${PATH}" PYTHONPATH="/context/src"
+COPY [".", "/context"]
+WORKDIR '/context'
 
 CMD ["/bin/bash"]

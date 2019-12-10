@@ -2,27 +2,25 @@
 
 CONTEXT=$PWD
 PROJECT=$(basename "$CONTEXT")
-REQFILE="requirements.txt"
-WORKDIR="/context"
 
 help() {
   echo "Run disposable containers built from $CONTEXT"
   echo
   echo "COMMANDS"
+  echo "help                    Show commands, examples, and Docker inventory"
   echo "alamode [TAG] [CMD]     Bake $PROJECT:TAG, freeze it, and serve CMD"
   echo "bake [TAG]              Build $PROJECT:TAG image from $CONTEXT"
   echo "clean                   Delete all $PROJECT containers and Docker leftovers"
   echo "debug TAG SCRIPT [ARGS] Debug Python SCRIPT in a $PROJECT:TAG container"
   echo "eightysix [TAG]         Delete $PROJECT:TAG image, containers, and leftovers"
-  echo "freeze [TAG]            Update $REQFILE and rebuild $PROJECT:TAG image"
-  echo "help                    Show commands, examples, and Docker inventory"
+  echo "freeze [TAG]            Update requirements.txt and rebuild $PROJECT:TAG"
   echo "runit [TAG] [CMD]       Run CMD in an interactive $PROJECT:TAG container"
-  echo "serve [TAG] [CMD]       runit [TAG] [CMD] with $CONTEXT mounted as $WORKDIR"
+  echo "serve [TAG] [CMD]       runit [TAG] [CMD] with $CONTEXT mounted as /context"
   echo
   echo "EXAMPLES"
-  echo "./kitchen bake latest"
-  echo "./kitchen freeze latest"
-  echo "./kitchen serve latest python -m test"
+  echo "./kitchen bake monty"
+  echo "./kitchen freeze monty"
+  echo "./kitchen serve monty python -m test"
   echo
   echo "INVENTORY"
   echo "---- Images ----" && docker image ls | sort
@@ -34,11 +32,8 @@ alamode() {
   bake "$1" && freeze "$1" && serve "$@"
 }
 bake() {
-  touch "$REQFILE" &&
-  docker build \
-    --tag "$PROJECT:${1:-latest}" \
-    --build-arg WORKDIR="$WORKDIR" \
-    "$CONTEXT" &&
+  touch requirements.txt &&
+  docker build --tag "$PROJECT:${1:-latest}" "$CONTEXT" &&
   docker image prune --force
 }
 clean() {
@@ -49,10 +44,12 @@ debug() {
   serve "$1" python -m pdb "${@:2}"
 }
 eightysix() {
-  clean && docker rmi --force "$PROJECT:${1:-latest}" && docker image prune --force
+  clean &&
+  docker rmi --force "$PROJECT:${1:-latest}" &&
+  docker image prune --force
 }
 freeze() {
-  docker run --rm "$PROJECT:${1:-latest}" pip freeze --exclude-editable > "$REQFILE" &&
+  docker run --rm "$PROJECT:${1:-latest}" pip freeze > requirements.txt &&
   bake "$1"
 }
 runit() {
@@ -60,9 +57,12 @@ runit() {
 }
 serve() {
   docker run --rm --interactive --tty \
-    --volume "${CONTEXT}:${WORKDIR}:delegated" \
     --hostname "${PROJECT}" \
+    --volume "${CONTEXT}:/context:delegated" \
     "$PROJECT:${1:-latest}" "${@:2}"
 }
 
-if [ $# -eq 0 ]; then help; else "$@"; fi
+if [ $# -eq 0 ];
+  then help;
+  else "$@";
+fi
