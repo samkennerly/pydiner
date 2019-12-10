@@ -74,7 +74,7 @@ Typing `./kitchen` before each command is optional if the `kitchen` is [sourced]
 
 ### baking images
 
-Baking [builds] an image with copies of files from the [build context].
+Baking creates or updates an image with copies of files from the [build context].
 
 - Inside a container, the <q>baked-in</q> copies will appear in the `/context` folder.
 - Every new `pydiner` container gets its own independent `/context` folder.
@@ -83,7 +83,6 @@ Baking [builds] an image with copies of files from the [build context].
 
 Modifying baked-in files does **not** affect the original files.
 
-[builds]: https://docs.docker.com/engine/reference/commandline/build/
 [build context]: https://docs.docker.com/engine/reference/commandline/build/
 
 ### freezing packages
