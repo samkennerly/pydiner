@@ -2,9 +2,12 @@
 
 Keep your [development environments] clean.
 
-![The Dirty Fork](pydiner.jpeg)
-
 [development environments]: https://en.wikipedia.org/wiki/Sandbox_(software_development)
+
+<img
+  alt="The Dirty Fork"
+  src="https://raw.githubusercontent.com/samkennerly/posters/master/pydiner.jpeg"
+  title="Lucky I didn't tell them about the dirty knife.">
 
 ## abstract
 
