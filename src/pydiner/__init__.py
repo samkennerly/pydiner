@@ -4,8 +4,8 @@ Example Python package.
 from .utensils import (
     REPO,
     achtung,
-    batcher,
-    clockstr,
+    batched,
+    clock,
     distinct,
     echo,
     fullpath,

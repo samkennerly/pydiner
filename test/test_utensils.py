@@ -9,17 +9,17 @@ import pydiner
 from .fixtures import TMPDIR
 
 
-def test_batcher(nseq=100, nbatch=23, joined=list):
+def test_batched(nseq=100, nbatch=23, joined=list):
     seq = joined(range(nseq))
     subseqs = [seq[i : i + nbatch] for i in range(0, nseq, nbatch)]
-    batches = pydiner.batcher(seq, nbatch, joined=joined)
+    batches = pydiner.batched(seq, nbatch, joined=joined)
 
     assert joined(batches) == subseqs, "value mismatch"
 
 
-def test_clockstr(maxerr=timedelta(seconds=1)):
+def test_clock(maxerr=timedelta(seconds=1)):
     now = datetime.utcnow()
-    stamped = datetime.fromisoformat(pydiner.clockstr())
+    stamped = datetime.fromisoformat(pydiner.clock())
 
     assert abs(stamped - now) < maxerr, f"timestamps off by more than {maxerr}"
 
@@ -39,19 +39,18 @@ def test_fullpath():
     assert pydiner.fullpath(relative) == Path.cwd() / relative, "bad relative path"
 
 
-def test_iterlines():
+def test_iterlines(nfiles=3, nlines=10):
     folder = TMPDIR
 
-    lines = [f"{i} spam\n" for i in range(10)]
-    paths = [folder / f"spam{i}.txt" for i in range(3)]
+    lines = [f"{i} spam\n" for i in range(nlines)]
+    paths = [folder / f"spam{i}.txt" for i in range(nfiles)]
     for path in paths:
         with open(path, "w") as f:
             f.writelines(lines)
 
-    lines = len(paths) * lines
     output = pydiner.iterlines(*paths)
 
-    assert list(output) == lines, "value mismatch"
+    assert list(output) == (nfiles * lines), "value mismatch"
 
 
 def test_loggers():
