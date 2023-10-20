@@ -6,7 +6,7 @@ HELPMSG=$(cat <<-END
 Build a Docker image and run disposable containers.
 
 COMMANDS
-bake [TAG]              Build $PROJECT:TAG image from $CONTEXT
+bake [TAG]              Build $PROJECT:TAG image
 clean                   Delete all $PROJECT containers and Docker leftovers
 debug TAG SCRIPT [ARGS] Debug Python SCRIPT in a $PROJECT:TAG container
 eightysix [TAG]         Delete $PROJECT:TAG containers, image, and leftovers
