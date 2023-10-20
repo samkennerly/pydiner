@@ -1,8 +1,9 @@
-# Dotfiles and dotfolders
+# Hidden files and folders
 **/.*
 
 # Caches
 **/__pycache__
+tmp/*
 
 # Variables
 var/*

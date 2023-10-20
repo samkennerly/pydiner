@@ -1,3 +1,6 @@
+# Caches
+/tmp/*
+
 # Variables
 /var/*
 !/var/small.txt
@@ -13,7 +16,7 @@ Thumbs.db
 .ipynb_checkpoints/
 jupyter_notebook_config.*
 
-# Python caches
+# Python debris
 *.egg
 *.egg-info
 *.py[cod]
