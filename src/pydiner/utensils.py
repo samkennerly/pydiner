@@ -2,7 +2,7 @@
 Utility functions.
 """
 from collections import OrderedDict
-from datetime import datetime
+from datetime import UTC, datetime
 from itertools import islice, repeat, takewhile
 from json import load as readjson
 from pathlib import Path
@@ -24,7 +24,7 @@ def batched(seq, n, joined=tuple, sliced=islice):
 
 def clock(timespec="seconds"):
     """ str: UTC date and time in ISO format. """
-    return datetime.utcnow().isoformat(sep=" ", timespec=timespec)
+    return datetime.now(UTC).isoformat(sep=" ", timespec=timespec)
 
 
 def distinct(seq):

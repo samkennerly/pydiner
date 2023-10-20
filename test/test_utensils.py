@@ -1,7 +1,7 @@
 """
 Tests for the 'utensils' module
 """
-from datetime import datetime, timedelta
+from datetime import UTC, datetime, timedelta
 from io import StringIO
 from pathlib import Path
 
@@ -18,7 +18,7 @@ def test_batched(nseq=100, nbatch=23, joined=list):
 
 
 def test_clock(maxerr=timedelta(seconds=1)):
-    now = datetime.utcnow()
+    now = datetime.now(UTC)
     stamped = datetime.fromisoformat(pydiner.clock())
 
     assert abs(stamped - now) < maxerr, f"timestamps off by more than {maxerr}"
