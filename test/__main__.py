@@ -4,6 +4,8 @@ Example: Run all tests in a module.
 from .fixtures import all_tests, bad_result, clear_tmpdir
 from . import test_utensils
 
+TEST_MODULES = (test_utensils, )
+
 
 def errors(module):
     """ int: Run all tests in module. Return number of failed tests. """
@@ -14,13 +16,14 @@ def errors(module):
         print(f"{modname}.{name}: {err}")
 
     errors = sum( 1 for v in results.values() if v is not None )
-    print(f"{errors} errors in {modname}")
+    print(f"\n{errors} errors in {modname}\n")
 
     return errors
 
-clear_tmpdir()
 
-if errors(test_utensils):
-    print("*** FAIL ***")
-else:
-    print("OK!")
+print("Testing modules:", *TEST_MODULES, "", sep="\n")
+
+clear_tmpdir()
+nfails = sum( errors(x) for x in TEST_MODULES )
+
+print(f"*** {nfails} FAILED TESTS ***") if nfails else print("OK!")
