@@ -6,7 +6,7 @@ from io import StringIO
 from pathlib import Path
 
 import pydiner
-from . import fixtures
+from .fixtures import TMPDIR
 
 
 def test_batcher(nseq=100, nbatch=23, joined=list):
@@ -40,9 +40,7 @@ def test_fullpath():
 
 
 def test_iterlines():
-    folder = fixtures.TMPDIR
-
-    fixtures.clear_tmpdir()
+    folder = TMPDIR
 
     lines = [f"{i} spam\n" for i in range(10)]
     paths = [folder / f"spam{i}.txt" for i in range(3)]
