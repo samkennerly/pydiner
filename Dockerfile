@@ -1,4 +1,4 @@
-FROM python:3.7.5
+FROM python:3.12.0
 LABEL description="Python development sandbox"
 LABEL maintainer="samkennerly@gmail.com"
 
@@ -9,9 +9,9 @@ RUN apt-get -y update && apt-get -y install less tree vim
 COPY requirements.txt /tmp
 RUN pip install --upgrade pip && pip install --requirement /tmp/requirements.txt
 
-# Copy repo files (unless .dockerignore)
-ENV PATH="/context/bin:${PATH}" PYTHONPATH="/context/src"
+# Ensure that Python can find the files in this repo
 COPY [".", "/context"]
-WORKDIR '/context'
+ENV PATH="/context/bin:${PATH}" PYTHONPATH="/context/src"
 
+WORKDIR '/context'
 CMD ["/bin/bash"]
