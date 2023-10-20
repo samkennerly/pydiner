@@ -18,8 +18,8 @@ def test_batched(nseq=100, nbatch=23, joined=list):
 
 
 def test_clock(maxerr=timedelta(seconds=1)):
-    now = datetime.now(UTC)
-    stamped = datetime.fromisoformat(pydiner.clock())
+    now = datetime.now(tz=UTC)
+    stamped = datetime.fromisoformat(pydiner.clock()).astimezone(UTC)
 
     assert abs(stamped - now) < maxerr, f"timestamps off by more than {maxerr}"
 

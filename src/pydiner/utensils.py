@@ -24,7 +24,7 @@ def batched(seq, n, joined=tuple, sliced=islice):
 
 def clock(timespec="seconds"):
     """ str: UTC date and time in ISO format. """
-    return datetime.now(UTC).isoformat(sep=" ", timespec=timespec)
+    return datetime.now(UTC).isoformat(sep=" ", timespec=timespec)[:19]
 
 
 def distinct(seq):
