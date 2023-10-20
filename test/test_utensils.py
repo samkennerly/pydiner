@@ -1,5 +1,5 @@
 """
-Example unit tests.
+Tests for the 'utensils' module
 """
 from datetime import datetime, timedelta
 from io import StringIO
@@ -39,9 +39,10 @@ def test_fullpath():
     assert pydiner.fullpath(relative) == Path.cwd() / relative, "bad relative path"
 
 
-@fixtures.cleartmp
 def test_iterlines():
     folder = fixtures.TMPDIR
+
+    fixtures.clear_tmp()
 
     lines = [f"{i} spam\n" for i in range(10)]
     paths = [folder / f"spam{i}.txt" for i in range(3)]
