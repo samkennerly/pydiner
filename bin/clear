@@ -1,7 +1,11 @@
-#!/usr/bin/env sh
+#!/usr/bin/env bash
 # Delete cache files.
 
-caches=('__pycache__' '.ipynb_checkpoints' '.pytest_cache')
+caches=(
+  '__pycache__'
+  '.ipynb_checkpoints'
+  '.pytest_cache'
+  )
 
 for x in "${caches[@]}"; do
   find . -name "$x" | xargs rm -rv;
