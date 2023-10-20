@@ -42,7 +42,7 @@ def test_fullpath():
 def test_iterlines():
     folder = fixtures.TMPDIR
 
-    fixtures.clear_tmp()
+    fixtures.clear_tmpdir()
 
     lines = [f"{i} spam\n" for i in range(10)]
     paths = [folder / f"spam{i}.txt" for i in range(3)]

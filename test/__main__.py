@@ -1,7 +1,7 @@
 """
 Example: Run all tests in a module.
 """
-from .fixtures import all_tests, bad_result, clear_tmp
+from .fixtures import all_tests, bad_result, clear_tmpdir
 from . import test_utensils
 
 
@@ -24,4 +24,4 @@ if any(errors(test_utensils)):
 else:
     print("OK!")
 
-clear_tmp()
+clear_tmpdir()

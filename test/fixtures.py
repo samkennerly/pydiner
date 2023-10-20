@@ -4,9 +4,8 @@ Example test fixtures: constants, cleanup methods, etc.
 from pathlib import Path
 from shutil import rmtree
 
-# Absolute paths to repo and temp folder
 REPO = Path(__file__).resolve().parent.parent
-TMPDIR = REPO / "tmp"
+TMPDIR = REPO/"tmp"
 
 
 def all_tests(module):
@@ -25,7 +24,7 @@ def bad_result(meth):
         return err
 
 
-def clear_tmp():
+def clear_tmpdir():
     """ None: Create a clean temporary folder. """
     if TMPDIR.exists():
         rmtree(TMPDIR)
