@@ -8,8 +8,8 @@ from json import load as readjson
 from pathlib import Path
 from sys import stderr
 
+# Absolute path to this repository
 REPO = Path(__file__).resolve().parent.parent.parent
-PROFILES = REPO / "etc"
 
 
 def achtung(*args, file=stderr):
@@ -43,8 +43,9 @@ def fullpath(path=""):
 
 
 def getparams(profile, **kwargs):
-    """ dict: kwargs with default values from a pre-saved profile. """
-    profile = (PROFILES / profile).with_suffix(".json")
+    """ dict: kwargs, but with default values from a pre-saved profile. """
+    profile = Path(profile).with_suffix(".json")
+
     with open(profile) as file:
         params = readjson(file)
 
