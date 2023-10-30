@@ -1,6 +1,6 @@
 {
   "word": "eggs",
   "nbatch": 1000,
-  "outpath": "eggs.txt",
+  "outpath": "default.txt",
   "quiet": false
 }
