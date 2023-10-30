@@ -15,7 +15,7 @@ from argparse import ArgumentParser
 from itertools import permutations
 from pathlib import Path
 
-from pydiner import REPO, achtung, batched, echo, fullpath, getparams
+from pydiner import REPO, achtung, batched, echo, getparams
 
 
 OUTPUTS = REPO / "var"
@@ -30,8 +30,8 @@ def argparams():
     arg("word", nargs="?", type=str, help="scramble this string")
     arg("-n", "--nbatch", type=int, help="maximum batch size")
     arg("-o", "--outpath", type=Path, help="save output to this file")
-    arg("-p", "--profile", type=str, help="use pre-configured defaults")
-    arg("-q", "--quiet", action="store_true", help="no log messages to STDOUT")
+    arg("-p", "--profile", type=str, help="use these pre-configured arguments")
+    arg("-q", "--quiet", action="store_true", help="print fewer log messages")
     parsed = parsed.parse_args()
     parsed = { k:v for k,v in vars(parsed).items() if v is not None }
 
@@ -54,16 +54,18 @@ def main(**kwargs):
     word = params.pop("word")
 
     nlines = factorial(len(word))
-    megalines = nlines // 1_000_000
     if not quiet:
         echo(f"Calculate {nlines} permutations of '{word}'")
+
+    megalines = nlines // 1_000_000
     if megalines:
         achtung(f"Expected output is {megalines} million lines")
 
+    words = ("".join(x) for x in permutations(sorted(word)))
+
     echo(f"Write output to {outpath}")
-    perms = ("".join(x) for x in permutations(sorted(word)))
     with open(outpath, "w") as file:
-        for batch in batched(perms, nbatch):
+        for batch in batched(words, nbatch):
             print("\n".join(batch), file=file)
 
 
