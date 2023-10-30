@@ -1,5 +1,5 @@
 {
-  "word": "DERANGEMENT",
+  "word": "0123456789",
   "nbatch": 100000,
   "outpath": "large.txt",
   "quiet": true
