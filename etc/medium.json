@@ -1,4 +1,6 @@
 {
   "word": "snakes",
-  "outpath": "medium.txt"
+  "nbatch": 1000,
+  "outpath": "medium.txt",
+  "quiet": false
 }

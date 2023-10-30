@@ -1,4 +1,6 @@
 {
   "word": "spam",
-  "outpath": "small.txt"
+  "nbatch": 1000,
+  "outpath": "small.txt",
+  "quiet": false
 }
