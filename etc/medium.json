@@ -1,4 +1,4 @@
 {
-  "nbatch": 10000,
-  "word": "1234567890"
+  "word": "snakes",
+  "outpath": "medium.txt"
 }
