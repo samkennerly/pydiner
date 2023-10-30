@@ -1,7 +1,15 @@
 #!/usr/bin/env python3
 """
-Print (or save) derangements of a character string.
-Run this script with the --help option for details.
+Print all derangements of the characters in a string.
+Run with the --help option to see a help menu.
+
+This example script demonstrates some common tasks:
+
+- Read and parse command-line arguments.
+- Load pre-configured arguments from file.
+- Save outputs to a (possibly very large) file.
+- Send log messages to STDOUT and errors to STDERR.
+
 """
 
 from argparse import ArgumentParser
@@ -11,7 +19,7 @@ from itertools import permutations
 from pathlib import Path
 from sys import stdout as STDOUT
 
-from pydiner import REPO, achtung, batcher, echo, fullpath, getparams
+from pydiner import REPO, achtung, batched, echo, fullpath, getparams
 
 NBATCH = 1_000
 OUTPATH = None
