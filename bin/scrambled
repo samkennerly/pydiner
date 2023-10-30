@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Print all derangements of the characters in a string.
+Print all permutations of the characters in a string.
 Run with the --help option to see a help menu.
 
 This example script tests some common tasks:
@@ -38,17 +38,6 @@ def argparams():
     return parsed
 
 
-def derangements(word):
-    """
-    Generator[str]: Permutations of word with no char in its original position.
-    Outputs are unique if and only if word has no duplicated letters.
-    Example: eggs -> ('gesg', 'gseg', 'gesg', 'gseg')
-    """
-    for perm in map("".join, permutations(sorted(word))):
-        if not any(x == y for x, y in zip(perm, word)):
-            yield perm
-
-
 def factorial(n):
     """ int: n! if n is a non-negative integer """
     return n * factorial(n - 1) if (n > 1) else 1
@@ -64,17 +53,17 @@ def main(**kwargs):
     quiet = params.pop("quiet")
     word = params.pop("word")
 
-    nlines = round(0.4 * factorial(len(word)))
-    if not quiet:
-        echo(f"Calculate approximately {nlines} derangements.")
-
+    nlines = factorial(len(word))
     megalines = nlines // 1_000_000
+    if not quiet:
+        echo(f"Calculate {nlines} permutations of '{word}'")
     if megalines:
         achtung(f"Expected output is {megalines} million lines")
 
-    echo(f"Write derangements of '{word}' to {outpath}")
+    echo(f"Write output to {outpath}")
+    perms = ("".join(x) for x in permutations(sorted(word)))
     with open(outpath, "w") as file:
-        for batch in batched(derangements(word), nbatch):
+        for batch in batched(perms, nbatch):
             print("\n".join(batch), file=file)
 
 
