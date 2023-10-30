@@ -23,7 +23,7 @@ PROFILES = REPO / "etc"
 
 
 def argparams():
-    """ dict: Parameters parsed from command-line inputs. """
+    """dict: Parameters parsed from command-line inputs."""
     parsed = ArgumentParser()
     parsed.description = """Find all derangements of characters in WORD."""
     arg = parsed.add_argument
@@ -33,13 +33,13 @@ def argparams():
     arg("-p", "--profile", type=str, help="use these pre-configured arguments")
     arg("-q", "--quiet", action="store_true", help="print fewer log messages")
     parsed = parsed.parse_args()
-    parsed = { k:v for k,v in vars(parsed).items() if v is not None }
+    parsed = {k: v for k, v in vars(parsed).items() if v is not None}
 
     return parsed
 
 
 def factorial(n):
-    """ int: n! if n is a non-negative integer """
+    """int: n! if n is a non-negative integer"""
     return n * factorial(n - 1) if (n > 1) else 1
 
 

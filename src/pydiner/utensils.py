@@ -13,37 +13,37 @@ REPO = Path(__file__).resolve().parent.parent.parent
 
 
 def achtung(*args, file=stderr):
-    """ None: Print timestamp and error message(s) to STDERR. """
+    """None: Print timestamp and error message(s) to STDERR."""
     echo("\x1b[93m* WARNING *\x1b[0m", *args, file=file)
 
 
 def batched(seq, n, joined=tuple, sliced=islice):
-    """ Iterator[tuple]: Length-limited batches taken from iterable. """
+    """Iterator[tuple]: Length-limited batches taken from iterable."""
     return takewhile(len, (joined(sliced(x, n)) for x in repeat(iter(seq))))
 
 
 def clock(timespec="seconds"):
-    """ str: UTC date and time in ISO format. """
+    """str: UTC date and time in ISO format."""
     return datetime.now(UTC).isoformat(sep=" ", timespec=timespec)[:19]
 
 
 def distinct(seq):
-    """ Iterator: Unique sequence elements in original order. """
+    """Iterator: Unique sequence elements in original order."""
     return iter(OrderedDict.fromkeys(seq))
 
 
 def echo(*args, file=None):
-    """ None: Print timestamp and log message(s) to STDOUT. """
+    """None: Print timestamp and log message(s) to STDOUT."""
     print(clock(), *args, file=file, flush=True)
 
 
 def fullpath(path=""):
-    """ Path: Expand relative paths and tildes. """
+    """Path: Expand relative paths and tildes."""
     return Path.cwd() / Path(path).expanduser()
 
 
 def getparams(profile, **kwargs):
-    """ dict: kwargs, but with default values from a pre-saved profile. """
+    """dict: kwargs, but with default values from a pre-saved profile."""
     profile = Path(profile).with_suffix(".json")
 
     with open(profile) as file:
@@ -53,12 +53,12 @@ def getparams(profile, **kwargs):
 
 
 def hello(obj):
-    """ None: Print short description of a Python object. """
+    """None: Print short description of a Python object."""
     print(obj.__name__, type(obj).__name__, obj.__doc__, sep="\n")
 
 
 def iterlines(*paths):
-    """ Iterator[str]: Read one or more text files lazily. """
+    """Iterator[str]: Read one or more text files lazily."""
     for path in paths:
         with open(path) as file:
             yield from file
