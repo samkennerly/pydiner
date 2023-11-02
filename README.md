@@ -9,6 +9,7 @@ Keep your [development environments] clean.
   src="https://raw.githubusercontent.com/samkennerly/posters/master/pydiner.jpeg"
   title="Lucky I didn't tell them about the dirty knife.">
 
+
 ## abstract
 
 `pydiner` is a [template] for a generic Python project which:
@@ -31,11 +32,12 @@ These rules are intended to avoid [dependency hell].
 [pip]: https://pip.pypa.io/en/stable/
 [dependency hell]: https://en.wikipedia.org/wiki/Dependency_hell
 
+
 ## basics
 
 To start a new project:
 
-1. Generate a new repo [from this template].
+1. Create a [Git repo from this template].
 1. Delete any files and folders you don't want.
 1. Edit the `Dockerfile` to choose a Python version.
 1. Edit `requirements.txt` to choose Python packages.
@@ -43,98 +45,102 @@ To start a new project:
 ```sh
 ./kitchen
 ```
-This will show the `kitchen` help message.
+This should print a help message for the `kitchen` script.
 
-[from this template]: https://help.github.com/en/articles/creating-a-repository-from-a-template
-[terminal]: https://en.wikipedia.org/wiki/Command-line_interface
+### `kitchen` functions
 
-### mise en python
+The `kitchen` script defines [shell functions] which run common Docker commands.
 
-The `kitchen` script defines [shell functions] for Docker commands.
 ```sh
 # Bake a Docker image named pydiner:monty
 ./kitchen bake monty
 
-# Freeze requirements.txt and rebuild pydiner:monty
-./kitchen freeze monty
+# Run Python in an interactive pydiner:monty container
+./kitchen runit monty python
 
-# Serve Python in a pydiner:monty container with $PWD mounted as /context
+# Same as above, but with the current working directory mounted as /context
 ./kitchen serve monty python
 
-# Run tests in a pydiner:monty container without mounting any folders
+# Run tests in an interactive pydiner:monty container
 ./kitchen runit monty python -m test
 
-# Show which files were baked into the image
-./kitchen runit monty tree
+# Same as above, but use pytest to run tests
+./kitchen runit monty pytest
+
+# Freeze requirements.txt and rebuild pydiner:monty
+./kitchen freeze monty
 
 # Delete the image, its containers, and any leftovers
 ./kitchen eightysix monty
 ```
-Typing `./kitchen` before each command is optional if the `kitchen` is [sourced].
+Typing `./kitchen` before each command is optional if the `kitchen` script is [sourced].
 
+[Git repo from this template]: https://help.github.com/en/articles/creating-a-repository-from-a-template
+[terminal]: https://en.wikipedia.org/wiki/Command-line_interface
 [shell functions]: https://www.gnu.org/software/bash/manual/html_node/Shell-Functions.html
 [sourced]: https://en.wikipedia.org/wiki/Source_(command)
 
-### baking images
+### `bake` an image
 
-Baking creates or updates an image with copies of files from the [build context].
+`./kitchen bake` builds (or updates) a Docker image with copies of files from the [build context].
 
-- Inside a container, the <q>baked-in</q> copies will appear in the `/context` folder.
-- Every new `pydiner` container gets its own independent `/context` folder.
+- Edit `requirements.txt` to specify which Python packages should be installed.
 - Edit `.dockerignore` to declare file patterns which should never be copied.
 - Edit `Dockerfile` to choose which non-ignored files are copied into images.
 
-Modifying baked-in files does **not** affect the original files.
+The default image name is `pydiner:latest`.
 
 [build context]: https://docs.docker.com/engine/reference/commandline/build/
 
-### freezing packages
+### `runit` interactively
 
-Freezing an image runs `pip freeze` and saves the output to `requirements.txt`.
+`./kitchen runit` [runs a new interactive container] from a previously-baked image.
 
-- [Pinned] versions are necessary to produce [reproducible builds].
-- When an image is baked for the first time, `pip` installs packages.
-- Baking an image again might not install exactly the same package versions.
-- Running `freeze` enables `pip` to install the same package versions every time.
+- Inside a container, <q>baked-in</q> copies of files are in the `/context` folder.
+- Modifying files inside the container does not affect the original files.
+- Type `exit` to exit the container. It should then [self-destruct].
 
-Freezing **overwrites** anything that was in `requirements.txt`.
+[runs a new interactive container]: https://docs.docker.com/engine/reference/commandline/run/
 
-[Pinned]: https://pip.pypa.io/en/stable/user_guide/#pinned-version-numbers
-[reproducible builds]: https://en.wikipedia.org/wiki/Reproducible_builds
+### `serve` with mounted files
 
-### serving with fresh files
+`./kitchen serve` runs a container with the current folder [mounted] as `/context`.
 
-Serving an image runs a new container with the current folder [mounted] as `/context`.
-
-- Images are immutable. Rebuilding is the only way to update baked-in files.
-- For development work, rebuilding after every code edit can be impractical.
-- Mounting a folder gives a container read and write access to the files inside.
+- Processes inside the container **can modify or delete** mounted files.
+- Changes to mounted files will be visible inside and outside the container.
 - Any files baked into `/context` will be obscured by the <q>fresh</q> mounted files.
-
-Mounts are **not** copies. If a mounted file dies in a container, it dies in the real world.
 
 [mounted]: https://docs.docker.com/storage/bind-mounts/
 
+### `freeze`
+
+`./kitchen freeze` [pins] Python packages to ensure [reproducible builds].
+
+- The first time an image is baked, `pip` installs packages automatically.
+- If an image is frozen, then baking it again uses the same package versions.
+- Freezing an image will **overwrite** `requirements.txt`.
+
+[pins]: https://pip.pypa.io/en/stable/user_guide/#pinned-version-numbers
+[reproducible builds]: https://en.wikipedia.org/wiki/Reproducible_builds
+
+
 ## contents
 
-`pydiner` includes short examples of common project ingredients:
+This repo contains examples of common project files:
 
-- [bin/](bin) contains executable scripts.
-- [etc/](etc) contains configuration files.
-- [src/](src) contains an importable [package].
+- [bin/](bin) contains example scripts.
+- [etc/](etc) contains example configuration files.
+- [src/](src) contains an example Python [package].
 - [test/](test) is an [executable package] which runs tests.
-- [var/](var) contains files output by the script(s).
-
-The [folder structure] is loosely based on a C++ template from [hiltmon.com].
+- [var/](var) contains files output by the executables.
 
 [package]: https://docs.python.org/3/tutorial/modules.html#packages
 [executable package]: https://docs.python.org/3/library/__main__.html
-[folder structure]: https://en.wikipedia.org/wiki/Directory_structure
-[hiltmon.com]: https://hiltmon.com/blog/2013/07/03/a-simple-c-plus-plus-project-structure/
+
 
 ## dependencies
 
-`pydiner` does not require Python. It has one dependency:
+`pydiner` has exactly one dependency:
 
 - Docker for [Linux] or [Mac] or [Windows]
 
@@ -145,9 +151,10 @@ Windows users may need to edit the `kitchen` script for [path compatibility].
 [Windows]: https://docs.docker.com/docker-for-windows/
 [path compatibility]: https://en.wikipedia.org/wiki/Path_(computing)#MS-DOS/Microsoft_Windows_style
 
+
 ## examples
 
-Remember to `cd` to this folder before running any `kitchen` commmands.
+*Caution:* Remember to `cd` to this folder before using `kitchen` functions.
 
 Bake a `pydiner:latest` image, freeze it, and serve `bash`.
 ```sh
@@ -220,15 +227,15 @@ The file `var/dirtyfork.txt` should still exist outside the container.
 
 ## faq
 
-### Let me out!!!1!
-
-Hit *CTRL-D* to exit a container.
-
 ### How do I install `pydiner`?
 
 Don't. Use it as a [template] for a new repository.
 
 [template]: https://help.github.com/en/articles/creating-a-repository-from-a-template
+
+### I'm stuck inside a container!
+
+Press *CTRL-D* or type `exit` to exit a container.
 
 ### Do I have to run containers as root?
 
@@ -242,6 +249,12 @@ Yes, but not with the `kitchen` script. See the [Docker run reference].
 
 [Docker run reference]: https://docs.docker.com/engine/reference/run/
 
+### What exception handler does `pydiner` use?
+
+None. Programs [stop immediately] when something goes wrong.
+
+[stop immediately]: https://global.toyota/en/company/vision-and-philosophy/production-system/
+
 ### What testing framework does `pydiner` use?
 
 None, but it has been tested with [pytest] to ensure compatibility.
@@ -250,15 +263,9 @@ None, but it has been tested with [pytest] to ensure compatibility.
 
 ### What logging framework does `pydiner` use?
 
-[None]. `achtung()` prints to `STDERR`. `echo()` prints to `STDOUT`.
+[None]. `utensils.achtung()` prints to `STDERR`. `utensils.echo()` prints to `STDOUT`.
 
 [None]: https://12factor.net/logs
-
-### What exception handler does `pydiner` use?
-
-None. Programs [stop immediately] when something goes wrong.
-
-[stop immediately]: https://global.toyota/en/company/vision-and-philosophy/production-system/
 
 ### What are some other Python project templates?
 
