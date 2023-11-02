@@ -2,13 +2,12 @@
 
 Keep your [development environments] clean.
 
-[development environments]: https://en.wikipedia.org/wiki/Sandbox_(software_development)
-
 <img
   alt="The Dirty Fork"
   src="https://raw.githubusercontent.com/samkennerly/posters/master/pydiner.jpeg"
   title="Lucky I didn't tell them about the dirty knife.">
 
+[development environments]: https://en.wikipedia.org/wiki/Sandbox_(software_development)
 
 ## abstract
 
@@ -261,3 +260,5 @@ None, but it has been tested with [pytest] to ensure compatibility.
 - [PyPA tutorial](https://packaging.python.org/tutorials/packaging-projects/)
 - [PyPA sample project](https://github.com/pypa/sampleproject)
 - [python-boilerplate.com](https://www.python-boilerplate.com)
+
+[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
